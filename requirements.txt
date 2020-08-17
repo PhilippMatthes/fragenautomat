@@ -1,1 +1,2 @@
 Django==3.0.8
+blurhash-python==1.0.2
