@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<div class="container">
+  {% for quiz in quizzes %}
+    {% if forloop.first %}
+      <div class="row mt-4">
+    {% elif forloop.counter0|divisibleby:"3" %}
+      </div>
+      <div class="row mt-4">
+    {% endif %}
+
+    <div class="col-sm">
+      <div class="card" style="width: 18rem;">
+        <div id="quiz-img-container-{{ quiz.id }}" class="card-img-top" alt="">
+
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">{{ quiz.title }}</h5>
+          <p class="card-text">{{ quiz.description }}</p>
+          <a href="{% url 'quizzes:quiz' quiz.slug %}" class="btn btn-primary">Show Quiz</a>
+        </div>
+      </div>
+    </div>
+
+    {% if forloop.last %}
+      </div>
+    {% endif %}
+  {% endfor %}
+</div>
+
+{% endblock %}
+
+{% block footer %}
+<script>
+  {% for quiz in quizzes %}
+  {% if quiz.image_blurhash %}
+  (function() {
+    const container = document.getElementById('quiz-img-container-{{ quiz.id }}');
+    const rect = container.getBoundingClientRect();
+    const pixels = blurhash.decode('{{ quiz.image_blurhash }}', rect.width, 256);
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    const imageData = ctx.createImageData(rect.width, 256);
+    imageData.data.set(pixels);
+    ctx.putImageData(imageData, 0, 0);
+    container.append(canvas);
+  })();
+  {% endif %}
+  {% endfor %}
+</script>
+{% endblock %}

@@ -3,35 +3,18 @@
 <html>
 
 <head>
-  <link href="{% static 'vendor/css/bulma.min.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/css/bootstrap.min.css' %}" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
-  <style>
-    .bg-paper {
-      background-color: #ecf0f1;
-    }
-
-    .bg-green {
-      background-color: #27ae60;
-    }
-
-    html {
-      font-family: 'Poppins', sans-serif;
-      display: flex;
-    }
-
-    body {
-      flex-grow: 1;
-    }
-  </style>
-
   {% block head %}{% endblock %}
 </head>
 
-<body>
-
+<body class="bg-light">
+  {% include 'navigation.html' %}
   {% block body %}{% endblock %}
 </body>
 
+<script src="{% static 'vendor/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'vendor/js/blurhash.min.js' %}"></script>
 {% block footer %}{% endblock %}
 
 </html>
