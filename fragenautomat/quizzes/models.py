@@ -1,6 +1,7 @@
 import pathlib
 import os
 
+from django.utils import timezone
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -22,7 +23,7 @@ class Quiz(models.Model):
     )
     image_blurhash = models.TextField(null=True, blank=True)
 
-    created_date = models.DateTimeField(auto_now_add=True)
+    created_date = models.DateTimeField(default=timezone.now)
     updated_date = models.DateTimeField(auto_now=True)
 
 

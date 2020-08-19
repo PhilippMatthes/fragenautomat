@@ -1,0 +1,15 @@
+.blurhash-card-img {
+  height: 148px;
+  background: #f0f0f0;
+}
+
+.smooth-shadow {
+  box-shadow: 0 1px 1px rgba(0,0,0,0.15),
+  0 2px 2px rgba(0,0,0,0.15);
+  transition: box-shadow 0.1s ease-in-out;
+}
+
+.smooth-shadow:hover {
+  box-shadow: 0 1px 1px rgba(0,0,0,0.11),
+  0 2px 2px rgba(0,0,0,0.11);
+}

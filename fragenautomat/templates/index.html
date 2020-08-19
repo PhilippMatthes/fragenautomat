@@ -3,51 +3,120 @@
 {% block body %}
 
 <div class="container">
-  {% for quiz in quizzes %}
-    {% if forloop.first %}
-      <div class="row mt-4">
-    {% elif forloop.counter0|divisibleby:"3" %}
-      </div>
-      <div class="row mt-4">
-    {% endif %}
-
-    <div class="col-sm">
-      <div class="card" style="width: 18rem;">
-        <div id="quiz-img-container-{{ quiz.id }}" class="card-img-top" alt="">
-
-        </div>
-        <div class="card-body">
-          <h5 class="card-title">{{ quiz.title }}</h5>
-          <p class="card-text">{{ quiz.description }}</p>
-          <a href="{% url 'quizzes:quiz' quiz.slug %}" class="btn btn-primary">Show Quiz</a>
-        </div>
-      </div>
-    </div>
-
-    {% if forloop.last %}
-      </div>
-    {% endif %}
-  {% endfor %}
+  <div id="quizzes-container">
+    <!-- Quizzes here -->
+  </div>
 </div>
 
 {% endblock %}
 
 {% block footer %}
 <script>
-  {% for quiz in quizzes %}
-  {% if quiz.image_blurhash %}
-  (function() {
-    const container = document.getElementById('quiz-img-container-{{ quiz.id }}');
-    const rect = container.getBoundingClientRect();
-    const pixels = blurhash.decode('{{ quiz.image_blurhash }}', rect.width, 256);
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-    const imageData = ctx.createImageData(rect.width, 256);
-    imageData.data.set(pixels);
-    ctx.putImageData(imageData, 0, 0);
-    container.append(canvas);
-  })();
-  {% endif %}
-  {% endfor %}
+  class LazyQuizImage {
+    constructor(container, hash, src) {
+      this.container = container;
+      this.hash = hash;
+      this.src = src;
+      const pixels = blurhash.decode(this.hash, 32, 32);
+      this.image = blurhash.getImageDataAsImage(pixels, 32, 32, () => {});
+      this.image.style.width = '100%';
+      this.image.style.height = '100%';
+      this.image.style.borderRadius = '0.25rem';
+      this.image.style.objectFit = 'cover';
+      this.container.append(this.image);
+    }
+
+    load() {
+      const self = this;
+      fetch(this.src).then(response => {
+        response.arrayBuffer().then(buffer => {
+          let binary = '';
+          const bytes = [].slice.call(new Uint8Array(buffer));
+          bytes.forEach((b) => binary += String.fromCharCode(b));
+          self.image.src = `data:image/jpeg;base64,${window.btoa(binary)}`;
+        });
+      });
+    }
+  }
+
+  function loadQuizzes(page) {
+    fetch(`/quizzes/?p=${page}`)
+      .then(response => {
+        if (status === 404) {
+          // TODO
+        } else {
+          return response.json();
+        }
+      })
+      .then(data => {
+        const quizzes = JSON.parse(data.objects);
+        const container = document.getElementById('quizzes-container');
+        const deck = document.createElement('div');
+        deck.classList.add('card-group');
+        deck.classList.add('mb-4');
+
+        for (let quiz of quizzes) {
+          const fields = quiz.fields;
+          const div = document.createElement('div');
+          div.classList.add('card');
+
+          const imgContainer = document.createElement('div')
+          imgContainer.classList.add('card-img-top');
+          imgContainer.classList.add('blurhash-card-img');
+          div.append(imgContainer);
+
+          const body = document.createElement('div');
+          body.classList.add('card-body');
+          body.innerHTML = `
+            <h5 class="card-title">${fields.title}</h5>
+            <p class="card-text">${fields.description}</p>
+            <a href="/quizzes/${fields.slug}/"
+               class="btn btn-primary">Show Quiz</a>
+          `;
+          div.append(body);
+
+          const footer = document.createElement('div');
+          footer.classList.add('card-footer');
+
+          const time = document.createElement('time');
+          time.setAttribute('class', 'timeago');
+          time.setAttribute('datetime', fields['created_date']);
+          time.innerHTML = $.timeago(fields['created_date']);
+          $(time).timeago();
+          footer.append(time)
+
+          div.append(footer);
+
+          deck.append(div);
+
+          if (fields['image_blurhash']) {
+            new LazyQuizImage(
+              imgContainer,
+              fields['image_blurhash'],
+              `/media/${fields.image}`
+            ).load();
+          }
+        }
+
+        deck.style.opacity = '0';
+        container.append(deck);
+
+        anime({
+          targets: deck,
+          opacity: [0, 1],
+          duration: 1000,
+          translateY: [25, 0],
+          easing: 'easeInOutQuad'
+        })
+
+        const hasNext = data.pagination['has_next'];
+        const nextPageNumber = data.pagination['next'];
+        if (hasNext === true) {
+          setTimeout(() => loadQuizzes(nextPageNumber), 500);
+        };
+      });
+  }
+
+  loadQuizzes(1);
 </script>
 {% endblock %}
