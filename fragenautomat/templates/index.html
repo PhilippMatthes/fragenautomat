@@ -12,31 +12,97 @@
 
 {% block footer %}
 <script>
-  class LazyQuizImage {
-    constructor(container, hash, src) {
-      this.container = container;
+  class MockedImage {
+    constructor() {
+      const image = document.createElement('div');
+      image.classList.add('quiz-image');
+      this.element = image;
+    }
+  }
+
+  class LazyImage {
+    constructor(hash, src) {
       this.hash = hash;
       this.src = src;
+
       const pixels = blurhash.decode(this.hash, 32, 32);
-      this.image = blurhash.getImageDataAsImage(pixels, 32, 32, () => {});
-      this.image.style.width = '100%';
-      this.image.style.height = '100%';
-      this.image.style.borderRadius = '0.25rem';
-      this.image.style.objectFit = 'cover';
-      this.container.append(this.image);
+      const image = blurhash.getImageDataAsImage(pixels, 32, 32, () => {});
+      image.classList.add('quiz-image');
+
+      this.element = image;
     }
 
     load() {
+      if (!this.src) return;
       const self = this;
       fetch(this.src).then(response => {
         response.arrayBuffer().then(buffer => {
           let binary = '';
           const bytes = [].slice.call(new Uint8Array(buffer));
           bytes.forEach((b) => binary += String.fromCharCode(b));
-          self.image.src = `data:image/jpeg;base64,${window.btoa(binary)}`;
+          self.element.src = `data:image/jpeg;base64,${window.btoa(binary)}`;
         });
       });
     }
+  }
+
+  class QuizTile {
+    constructor(quiz) {
+      this.quiz = quiz;
+
+      const wrappedTile = document.createElement('div');
+      wrappedTile.classList.add('tile', 'is-parent');
+
+      const tile = document.createElement('article');
+      tile.classList.add('tile', 'is-child', 'is-vertical');
+      tile.innerHTML = `
+        <p class="subtitle has-text-grey is-size-4 mt-4">${this.quiz.title}</p>
+        <div class="content mb-6">${this.quiz.description}</div>
+      `;
+
+      if (quiz.image_blurhash) {
+        this.image = new LazyImage(
+          quiz.image_blurhash,
+          `/media/${quiz.image}`
+        );
+        this.image.load();
+      } else {
+        this.image = new MockedImage();
+      }
+
+      const link = document.createElement('a');
+      link.classList.add('quiz-link');
+      link.setAttribute('href', `/quizzes/${this.quiz.slug}/`);
+      link.append(this.image.element);
+
+      tile.prepend(link);
+
+      wrappedTile.append(tile);
+
+      this.element = wrappedTile;
+    }
+  }
+
+  class QuizRowTile {
+    constructor(quizzes) {
+      this.quizzes = quizzes;
+
+      const row = document.createElement('div');
+      row.classList.add('tile', 'is-ancestor', 'is-horizontal');
+      for (let quiz of this.quizzes) {
+        row.append(new QuizTile(quiz).element);
+      }
+
+      this.element = row;
+    }
+  }
+
+  function chunk(arr, chunkSize) {
+    let result = [];
+    for(let i = 0, len = arr.length; i < len; i += chunkSize) {
+      result.push(arr.slice(i, i + chunkSize));
+    }
+    return result;
   }
 
   function loadQuizzes(page) {
@@ -49,68 +115,17 @@
         }
       })
       .then(data => {
-        const quizzes = JSON.parse(data.objects);
+        const objects = JSON.parse(data.objects);
         const container = document.getElementById('quizzes-container');
-        const deck = document.createElement('div');
-        deck.classList.add('card-group');
-        deck.classList.add('mb-4');
 
-        for (let quiz of quizzes) {
-          const fields = quiz.fields;
-          const div = document.createElement('div');
-          div.classList.add('card');
-
-          const imgContainer = document.createElement('div')
-          imgContainer.classList.add('card-img-top');
-          imgContainer.classList.add('blurhash-card-img');
-          div.append(imgContainer);
-
-          const body = document.createElement('div');
-          body.classList.add('card-body');
-          body.innerHTML = `
-            <h5 class="card-title">${fields.title}</h5>
-            <p class="card-text">${fields.description}</p>
-            <a href="/quizzes/${fields.slug}/"
-               class="btn btn-primary">Show Quiz</a>
-          `;
-          div.append(body);
-
-          const footer = document.createElement('div');
-          footer.classList.add('card-footer');
-
-          const time = document.createElement('time');
-          time.setAttribute('class', 'timeago');
-          time.setAttribute('datetime', fields['created_date']);
-          time.innerHTML = $.timeago(fields['created_date']);
-          $(time).timeago();
-          footer.append(time)
-
-          div.append(footer);
-
-          deck.append(div);
-
-          if (fields['image_blurhash']) {
-            new LazyQuizImage(
-              imgContainer,
-              fields['image_blurhash'],
-              `/media/${fields.image}`
-            ).load();
-          }
+        for (let chunkedObjects of chunk(objects, 3)) {
+          const quizzes = chunkedObjects.map(o => o.fields);
+          const row = new QuizRowTile(quizzes).element;
+          container.append(row);
         }
 
-        deck.style.opacity = '0';
-        container.append(deck);
-
-        anime({
-          targets: deck,
-          opacity: [0, 1],
-          duration: 1000,
-          translateY: [25, 0],
-          easing: 'easeInOutQuad'
-        })
-
-        const hasNext = data.pagination['has_next'];
-        const nextPageNumber = data.pagination['next'];
+        const hasNext = data.pagination.has_next;
+        const nextPageNumber = data.pagination.next;
         if (hasNext === true) {
           setTimeout(() => loadQuizzes(nextPageNumber), 500);
         };

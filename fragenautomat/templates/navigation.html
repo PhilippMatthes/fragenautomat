@@ -1,18 +1,62 @@
+<div class="container mb-6 mt-3">
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item is-size-4 has-text-primary" href="https://fragenautom.at">
+      fragenautom.at
+    </a>
 
-<div class="container">
-  <nav class="navbar navbar-expand-lg navbar-light">
-    <a class="navbar-brand" href="#">Fragenautom.at</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+    <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <form class="form-inline ml-auto my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-      </form>
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-start">
+      <a class="navbar-item">
+        Register
+      </a>
+
+      <a class="navbar-item">
+        Login
+      </a>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          More
+        </a>
+
+        <div class="navbar-dropdown">
+          <a class="navbar-item">
+            Legal Notes
+          </a>
+          <a class="navbar-item" href="mailto:contact@fragenautom.at">
+            Contact
+          </a>
+          <hr class="navbar-divider">
+          <a class="navbar-item"
+             href="https://github.com/fragenautomat/website/issues" target="_blank">
+            Report an issue
+          </a>
+        </div>
+      </div>
     </div>
-  </nav>
 
-  <hr class="mt-2">
+    <div class="navbar-end">
+      <div class="navbar-item">
+        <div class="field has-addons">
+          <div class="control">
+            <input class="input" type="text" placeholder="Quiz name, ...">
+          </div>
+          <div class="control">
+            <a class="button is-primary">
+              Search
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
 </div>

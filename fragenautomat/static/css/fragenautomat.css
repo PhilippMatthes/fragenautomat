@@ -1,6 +1,15 @@
-.blurhash-card-img {
-  height: 148px;
+.quiz-image {
+  height: 12rem;
+  width: 100%;
+  border-radius: 0.25rem;
   background: #f0f0f0;
+  object-fit: cover;
+  transition: all 0.3s ease-in-out;
+}
+
+.quiz-image:hover {
+  transform: scale(1.05) translateY(-10px);
+  filter: brightness(90%);
 }
 
 .smooth-shadow {
@@ -12,4 +21,13 @@
 .smooth-shadow:hover {
   box-shadow: 0 1px 1px rgba(0,0,0,0.11),
   0 2px 2px rgba(0,0,0,0.11);
+}
+
+body {
+  background: white;
+  font-family: 'Roboto', sans-serif !important;
+}
+
+.nav-container {
+  background: linear-gradient(45deg, #56CCF2, #2F80ED);
 }
