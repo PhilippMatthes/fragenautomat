@@ -1,33 +1,132 @@
-.quiz-image {
-  height: 12rem;
-  width: 100%;
-  border-radius: 0.25rem;
-  background: #f0f0f0;
-  object-fit: cover;
-  transition: all 0.3s ease-in-out;
-}
-
-.quiz-image:hover {
-  transform: scale(1.05) translateY(-10px);
-  filter: brightness(90%);
-}
-
-.smooth-shadow {
-  box-shadow: 0 1px 1px rgba(0,0,0,0.15),
-  0 2px 2px rgba(0,0,0,0.15);
-  transition: box-shadow 0.1s ease-in-out;
-}
-
-.smooth-shadow:hover {
-  box-shadow: 0 1px 1px rgba(0,0,0,0.11),
-  0 2px 2px rgba(0,0,0,0.11);
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: white;
-  font-family: 'Roboto', sans-serif !important;
+  font-family: 'Nunito', sans-serif !important;
 }
 
-.nav-container {
-  background: linear-gradient(45deg, #56CCF2, #2F80ED);
+main {
+  min-height: 100vh;
+}
+
+h1, .h1 {
+  font-size: 3rem;
+}
+
+h4, .h4 {
+  font-size: 1.25rem;
+}
+
+p, .p {
+  font-size: 1rem;
+}
+
+nav .input {
+  background: #fafafa;
+  border-radius: 2rem;
+  border-style: none;
+  padding: 1rem;
+}
+
+nav .field.has-addons .control:last-child:not(:only-child) .button,
+nav .field.has-addons .control:last-child:not(:only-child) .input,
+nav .field.has-addons .control:last-child:not(:only-child) .select select {
+  border-top-right-radius: 2rem;
+  border-bottom-right-radius: 2rem;
+}
+
+img.not-found {
+  width: 20rem;
+}
+
+img#legal {
+  height: 12rem;
+}
+
+.quiz-image-container {
+  position: relative;
+  transition: all 0.3s ease-in-out;
+}
+
+.quiz-image-container:hover {
+  transform: scale(1.05) translateY(-10px);
+  filter: brightness(90%);
+}
+
+.quiz-image {
+  height: 12rem;
+  width: 100%;
+  border-style: none;
+  border-radius: 0.25rem;
+  object-fit: cover;
+}
+
+.quiz-image-overlay {
+  border-radius: 0.25rem;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
+}
+
+.quiz-image-info {
+  border-radius: 0.25rem;
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+  padding-top: 0.1rem;
+  padding-bottom: 0.1rem;
+}
+
+.question-image {
+  height: 12rem;
+  display: block;
+  object-fit: contain;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 0.25rem;
+  border-color: lightgray;
+}
+
+.day-container {
+  padding: 0.25rem;
+}
+
+.day {
+  border-radius: 2rem;
+  background: #fafafa;
+  transition: all 0.3s ease-in-out;
+}
+
+.day:hover {
+  background: #f0f0f0;
+}
+
+.markdown p {
+  margin-bottom: 0.5rem;
+}
+
+.markdown code {
+  margin-bottom: 0.25rem;
+  border-radius: 0.25rem;
+}
+
+.markdown ol {
+  margin-left: 4rem;
+}
+
+.is-masked * {
+  background: #f0f0f0;
+  color: transparent;
+  border-radius: 0.25rem;
+}
+
+.is-masked img {
+  filter: contrast(0) opacity(0.2);
 }

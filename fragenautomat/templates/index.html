@@ -1,137 +1,71 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block body %}
 
 <div class="container">
-  <div id="quizzes-container">
-    <!-- Quizzes here -->
-  </div>
+  <section id="quizzes-container">
+    {% if page %}
+      <div class="columns is-multiline">
+      {% for quiz in page %}
+        <div class="column is-one-third">
+          <a href="{% url 'quizzes:quiz' quiz.slug %}">
+            <div class="quiz-image-container">
+              <img class="quiz-image blurhash"
+                  {% if quiz.image %}
+                  data-blurhash="{{ quiz.image_blurhash }}"
+                  data-src="{{ MEDIA_URL }}{{ quiz.image }}"
+                  {% endif %}
+                  >
+              <div class="quiz-image-overlay"></div>
+              <div class="quiz-image-info has-text-light">
+                <small>
+                  Created {{ quiz.created_date|timesince }} ago
+                  by <strong>{{ quiz.author.username }}</strong>
+                </small>
+              </div>
+            </div>
+            <p class="subtitle has-text-grey is-size-4 mt-4">{{ quiz.title }}</p>
+            <div class="content mb-6">{{ quiz.description }}</div>
+          </a>
+        </div>
+      {% endfor %}
+      </div>
+
+      {% include 'pagination.html' %}
+    {% else %}
+      <div class="has-text-centered">
+        <img class="not-found"
+             alt="not found"
+             src="{% static 'vendor/img/tree-swing.svg' %}">
+        <h4 class="mt-3">No quizzes found.</h4>
+
+        <form method="GET" action="/">
+          <div class="field has-addons mt-6">
+            <div class="control is-expanded">
+              <input class="input is-light"
+                      name="q"
+                      value="{{ request.GET.q }}"
+                      type="text"
+                      placeholder="Quiz name, ...">
+            </div>
+            <div class="control">
+              <a type="submit" href="/" class="button is-light">
+                <i class="fas fa-times-circle"></i>
+              </a>
+            </div>
+            <div class="control">
+              <button type="submit" class="button is-light">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    {% endif %}
+  </section>
 </div>
 
 {% endblock %}
 
-{% block footer %}
-<script>
-  class MockedImage {
-    constructor() {
-      const image = document.createElement('div');
-      image.classList.add('quiz-image');
-      this.element = image;
-    }
-  }
-
-  class LazyImage {
-    constructor(hash, src) {
-      this.hash = hash;
-      this.src = src;
-
-      const pixels = blurhash.decode(this.hash, 32, 32);
-      const image = blurhash.getImageDataAsImage(pixels, 32, 32, () => {});
-      image.classList.add('quiz-image');
-
-      this.element = image;
-    }
-
-    load() {
-      if (!this.src) return;
-      const self = this;
-      fetch(this.src).then(response => {
-        response.arrayBuffer().then(buffer => {
-          let binary = '';
-          const bytes = [].slice.call(new Uint8Array(buffer));
-          bytes.forEach((b) => binary += String.fromCharCode(b));
-          self.element.src = `data:image/jpeg;base64,${window.btoa(binary)}`;
-        });
-      });
-    }
-  }
-
-  class QuizTile {
-    constructor(quiz) {
-      this.quiz = quiz;
-
-      const wrappedTile = document.createElement('div');
-      wrappedTile.classList.add('tile', 'is-parent');
-
-      const tile = document.createElement('article');
-      tile.classList.add('tile', 'is-child', 'is-vertical');
-      tile.innerHTML = `
-        <p class="subtitle has-text-grey is-size-4 mt-4">${this.quiz.title}</p>
-        <div class="content mb-6">${this.quiz.description}</div>
-      `;
-
-      if (quiz.image_blurhash) {
-        this.image = new LazyImage(
-          quiz.image_blurhash,
-          `/media/${quiz.image}`
-        );
-        this.image.load();
-      } else {
-        this.image = new MockedImage();
-      }
-
-      const link = document.createElement('a');
-      link.classList.add('quiz-link');
-      link.setAttribute('href', `/quizzes/${this.quiz.slug}/`);
-      link.append(this.image.element);
-
-      tile.prepend(link);
-
-      wrappedTile.append(tile);
-
-      this.element = wrappedTile;
-    }
-  }
-
-  class QuizRowTile {
-    constructor(quizzes) {
-      this.quizzes = quizzes;
-
-      const row = document.createElement('div');
-      row.classList.add('tile', 'is-ancestor', 'is-horizontal');
-      for (let quiz of this.quizzes) {
-        row.append(new QuizTile(quiz).element);
-      }
-
-      this.element = row;
-    }
-  }
-
-  function chunk(arr, chunkSize) {
-    let result = [];
-    for(let i = 0, len = arr.length; i < len; i += chunkSize) {
-      result.push(arr.slice(i, i + chunkSize));
-    }
-    return result;
-  }
-
-  function loadQuizzes(page) {
-    fetch(`/quizzes/?p=${page}`)
-      .then(response => {
-        if (status === 404) {
-          // TODO
-        } else {
-          return response.json();
-        }
-      })
-      .then(data => {
-        const objects = JSON.parse(data.objects);
-        const container = document.getElementById('quizzes-container');
-
-        for (let chunkedObjects of chunk(objects, 3)) {
-          const quizzes = chunkedObjects.map(o => o.fields);
-          const row = new QuizRowTile(quizzes).element;
-          container.append(row);
-        }
-
-        const hasNext = data.pagination.has_next;
-        const nextPageNumber = data.pagination.next;
-        if (hasNext === true) {
-          setTimeout(() => loadQuizzes(nextPageNumber), 500);
-        };
-      });
-  }
-
-  loadQuizzes(1);
-</script>
-{% endblock %}

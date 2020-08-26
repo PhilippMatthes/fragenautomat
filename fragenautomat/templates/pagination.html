@@ -1,0 +1,57 @@
+<nav class="pagination" role="navigation" aria-label="pagination">
+  {% if page.has_previous %}
+  <a href="?p={{ page.previous_page_number }}"
+     class="pagination-previous">Previous</a>
+  {% endif %}
+  {% if page.has_next %}
+  <a href="?p={{ page.next_page_number }}"
+     class="pagination-next">Next page</a>
+  {% endif %}
+  <ul class="pagination-list">
+    {% if page.has_previous %}
+    <li>
+      <a href="?p=1" class="pagination-link" aria-label="Goto page 1">1</a>
+    </li>
+    <li>
+      <span class="pagination-ellipsis">&hellip;</span>
+    </li>
+      {% if page.previous_page_number != 1 %}
+      <li>
+        <a href="?p={{ page.previous_page_number }}"
+           class="pagination-link"
+           aria-label="Goto page {{ page.previous_page_number }}">
+          {{ page.previous_page_number }}
+        </a>
+      </li>
+      {% endif %}
+    {% endif %}
+    <li>
+      <a class="pagination-link is-current"
+         aria-label="Page {{ page.number }}" aria-current="page">
+        {{ page.number }}
+      </a>
+    </li>
+
+    {% if page.has_next %}
+      {% if page.next_page_number != page.paginator.num_pages %}
+      <li>
+        <a href="?p={{ page.next_page_number }}"
+           class="pagination-link"
+           aria-label="Goto page {{ page.next_page_number }}">
+          {{ page.next_page_number }}
+        </a>
+      </li>
+      {% endif %}
+    <li>
+      <span class="pagination-ellipsis">&hellip;</span>
+    </li>
+    <li>
+    <a href="?p={{ page.paginator.num_pages }}"
+       class="pagination-link"
+       aria-label="Goto page {{ page.paginator.num_pages }}">
+      {{ page.paginator.num_pages }}
+    </a>
+    </li>
+    {% endif %}
+  </ul>
+</nav>

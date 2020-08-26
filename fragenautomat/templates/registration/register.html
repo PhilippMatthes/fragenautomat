@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<div class="container">
+
+  <div class="columns is-centered">
+    <div class="column is-6 box">
+      <h4>Registration</h4>
+      <hr>
+
+      <form method="POST">
+        {% include 'registration/form.html' %}
+
+        <input type="hidden" name="next" value="{{ next }}">
+
+        <div class="field is-grouped">
+          <div class="control">
+            <button type="submit" class="button is-link">Register</button>
+          </div>
+          <div class="control">
+            <a href="{% url 'login' %}"
+               class="button is-link is-light">Login</a>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,21 +1,46 @@
 {% load static %}
+{% get_media_prefix as MEDIA_URL %}
 
 <html>
 
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <link href="{% static 'vendor/css/bulma.min.css' %}" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap" rel="stylesheet">
+  <link href="{% static 'vendor/css/fa.min.css' %}" rel="stylesheet">
+
+  <link href="https://fonts.googleapis.com/css2?family=Nunito&display=swap" rel="stylesheet">
+
   <link href="{% static 'css/fragenautomat.css' %}" rel="stylesheet">
   {% block head %}{% endblock %}
 </head>
 
-<body>
+<body class="mx-4">
   {% include 'navigation.html' %}
-  {% block body %}{% endblock %}
-</body>
 
-<script src="{% static 'vendor/js/blurhash.min.js' %}"></script>
-<script src="{% static 'vendor/js/anime.min.js' %}"></script>
-{% block footer %}{% endblock %}
+  <hr class="mt-0">
+
+  <main class="mt-6">
+    {% block body %}{% endblock %}
+  </main>
+
+  <hr>
+
+  <footer class="footer has-background-white">
+    <div class="has-text-centered">
+      <p>
+        <small class="has-text-grey">
+          Webdesign with <i class="fas fa-heart"></i> by <a href="https://philippmatth.es">philippmatth.es</a target="_blank">
+        </small>
+      </p>
+    </div>
+  </footer>
+
+  <script src="{% static 'vendor/js/blurhash.min.js' %}"></script>
+  <script src="{% static 'vendor/js/anime.min.js' %}"></script>
+
+  <script src="{% static 'js/blurhash.loader.js' %}"></script>
+  {% block extrabody %}{% endblock %}
+</body>
 
 </html>

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<div class="container">
+
+  <div class="columns is-centered">
+    <div class="column is-6 box">
+      <h4>Login</h4>
+      <hr>
+
+      {% if form.errors %}
+      <div class="notification is-danger">
+        Your username and password didn't match. Please try again.
+      </div>
+      {% endif %}
+
+      {% if next %}
+        {% if user.is_authenticated %}
+        <div class="notification is-danger">
+          Your account doesn't have access to this page. To proceed, please login with an account that has access.
+        </div>
+        {% else %}
+        <div class="notification is-info">Please login to see this page.</div>
+        {% endif %}
+      {% endif %}
+
+      <form method="POST">
+        {% include 'registration/form.html' %}
+
+        <input type="hidden" name="next" value="{{ next }}">
+
+        <div class="field is-grouped">
+          <div class="control">
+            <button type="submit" class="button is-link">Login</button>
+          </div>
+          <div class="control">
+            <a href="{% url 'registration' %}"
+               class="button is-link is-light">Register</a>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
