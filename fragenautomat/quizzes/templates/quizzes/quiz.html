@@ -8,7 +8,7 @@
   {% for question in page %}
     <div class="box my-6">
       <div>
-        <small class="has-text-grey">Question</small>
+        <small class="has-text-grey">Question {{ page.number }}</small>
         {% if question.description_image %}
           <img class="question-image mt-3 blurhash"
               data-blurhash="{{ question.description_image_blurhash }}"

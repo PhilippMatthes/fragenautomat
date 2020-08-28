@@ -1,2 +1,4 @@
 */db.sqlite3
+fragenautomat/media/
+fragenautomat/quizzes/management/commands/data/
 __pycache__/

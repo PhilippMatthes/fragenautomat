@@ -25,7 +25,7 @@ SECRET_KEY = '$s_)d($wr=iac&=*@e)@z6zh@50kl9q5m+imc*v%%slc3)&sam'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition

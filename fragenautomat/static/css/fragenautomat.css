@@ -23,6 +23,10 @@ p, .p {
   font-size: 1rem;
 }
 
+.navbar-menu {
+  border-radius: 0.25rem;
+}
+
 nav .input {
   background: #fafafa;
   border-radius: 2rem;
