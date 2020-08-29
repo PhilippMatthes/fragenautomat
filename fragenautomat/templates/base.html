@@ -4,7 +4,73 @@
 <html>
 
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!--
+    The following 2 meta tags *must* come first in the <head>
+    to consistently ensure proper document rendering.
+    Any other head element should come *after* these tags.
+  -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>fragenautom.at</title>
+
+  <meta name="application-name" content="fragenautom.at">
+
+  <!-- Theme Color for Chrome, Firefox OS and Opera -->
+  <meta name="theme-color" content="#4b7bec">
+
+  <!-- Short description of the document (limit to 150 characters) -->
+  <!-- This content *may* be used as a part of search engine results. -->
+  <meta name="description" content="Fragenautom.at is a website for educational questionnaires.">
+
+  <!-- Identify the software used to build the document (i.e. - WordPress, Dreamweaver) -->
+  <meta name="generator" content="Django">
+
+  <!-- Short description of your document's subject -->
+  <meta name="subject" content="Publish questionnaires online.">
+
+  <!-- Gives a general age rating based on the document's content -->
+  <meta name="rating" content="General">
+
+  <!-- Allows control over how referrer information is passed -->
+  <meta name="referrer" content="no-referrer">
+
+  <!-- Icon in the highest resolution we need it for -->
+  <link rel="icon" href="{% static 'img/fragenautomat-logo.ico' %}">
+
+  <!-- Apple Touch Icon (reuse 192px icon.png) -->
+  <link rel="apple-touch-icon" href="{% static 'img/fragenautomat-logo-600.png' %}">
+
+  <!-- Refers to a copyright statement that applies to the link's context -->
+  <link rel="license" href="{% url 'legal' %}">
+
+  <!-- Links to top level resource in an hierarchical structure -->
+  <link rel="index" href="{% url 'index' %}">
+
+  {% if page %}
+    <!-- The first, last, previous, and next documents in a series of documents, respectively -->
+
+    <link rel="first" href="?p=1">
+    <link rel="last" href="?p={{ page.paginator.num_pages }}">
+
+    {% if page.has_previous %}
+      <link rel="prev" href="?p={{ page.previous_page_number }}">
+    {% endif %}
+    {% if page.has_next %}
+      <link rel="next" href="?p={{ page.next_page_number }}">
+    {% endif %}
+
+  {% endif %}
+
+  <!-- Prefetching, preloading, prebrowsing -->
+  <!-- More info: https://css-tricks.com/prefetching-preloading-prebrowsing/ -->
+  <link rel="prefetch" href="{% static 'vendor/css/bulma.min.css' %}">
+  <link rel="prefetch" href="{% static 'vendor/css/fa.min.css' %}">
+  <link rel="prefetch" href="{% static 'css/fragenautomat.css' %}">
+  <link rel="prefetch" href="{% static 'vendor/css/fa.min.css' %}">
+  <link rel="prefetch" href="{% static 'vendor/js/blurhash.min.js' %}">
+  <link rel="prefetch" href="{% static 'vendor/js/anime.min.js' %}">
+  <link rel="prefetch" href="{% static 'js/blurhash.loader.js' %}">
 
   <link href="{% static 'vendor/css/bulma.min.css' %}" rel="stylesheet">
   <link href="{% static 'vendor/css/fa.min.css' %}" rel="stylesheet">

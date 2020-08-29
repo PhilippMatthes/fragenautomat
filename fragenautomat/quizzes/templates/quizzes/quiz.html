@@ -2,6 +2,12 @@
 
 {% load static %}
 
+{% block head %}
+  {% if page.has_next %}
+    <link rel="prerender" href="?p={{ page.next_page_number }}">
+  {% endif %}
+{% endblock %}
+
 {% block body %}
 
 <div class="container">

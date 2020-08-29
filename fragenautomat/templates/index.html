@@ -2,6 +2,14 @@
 
 {% load static %}
 
+{% block head %}
+  {% if page.paginator.count == 1 %}
+    {% for quiz in page %}
+      <link rel="prerender" href="{% url 'quizzes:quiz' quiz.slug %}">
+    {% endfor %}
+  {% endif %}
+{% endblock %}
+
 {% block body %}
 
 <div class="container">
