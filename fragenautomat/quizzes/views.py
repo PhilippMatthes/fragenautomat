@@ -1,10 +1,10 @@
 from django.views.generic import View
 from django.template.response import TemplateResponse
 from django.shortcuts import get_object_or_404
-from django.http import JsonResponse, Http404
+from django.http import Http404
 from django.core.paginator import Paginator, InvalidPage
 
-from quizzes.models import Question, Quiz
+from quizzes.models import Quiz
 
 
 class QuizView(View):

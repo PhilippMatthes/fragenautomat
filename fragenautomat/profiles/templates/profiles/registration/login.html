@@ -26,7 +26,7 @@
       {% endif %}
 
       <form method="POST">
-        {% include 'registration/form.html' %}
+        {% include 'form.html' %}
 
         <input type="hidden" name="next" value="{{ next }}">
 
@@ -35,7 +35,7 @@
             <button type="submit" class="button is-link">Login</button>
           </div>
           <div class="control">
-            <a href="{% url 'registration' %}"
+            <a href="{% url 'profiles:registration' %}"
                class="button is-link is-light">Register</a>
           </div>
         </div>

@@ -10,7 +10,7 @@
       <hr>
 
       <form method="POST">
-        {% include 'registration/form.html' %}
+        {% include 'form.html' %}
 
         <input type="hidden" name="next" value="{{ next }}">
 
@@ -19,7 +19,7 @@
             <button type="submit" class="button is-link">Register</button>
           </div>
           <div class="control">
-            <a href="{% url 'login' %}"
+            <a href="{% url 'profiles:login' %}"
                class="button is-link is-light">Login</a>
           </div>
         </div>

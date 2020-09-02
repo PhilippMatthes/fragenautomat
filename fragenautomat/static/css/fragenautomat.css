@@ -15,8 +15,20 @@ h1, .h1 {
   font-size: 3rem;
 }
 
+h2, .h2 {
+  font-size: 2rem;
+}
+
+h3, .h3 {
+  font-size: 1.5rem;
+}
+
 h4, .h4 {
   font-size: 1.25rem;
+}
+
+h5, .h5 {
+  font-size: 1rem;
 }
 
 p, .p {
@@ -103,7 +115,7 @@ img#legal {
 }
 
 .day {
-  border-radius: 2rem;
+  border-radius: 0.25rem;
   background: #fafafa;
   transition: all 0.3s ease-in-out;
 }
@@ -112,7 +124,13 @@ img#legal {
   background: #f0f0f0;
 }
 
-.markdown p {
+.markdown p,
+.markdown ul,
+.markdown h1,
+.markdown h2,
+.markdown h3,
+.markdown h4,
+.markdown h5 {
   margin-bottom: 0.5rem;
 }
 
@@ -133,4 +151,9 @@ img#legal {
 
 .is-masked img {
   filter: contrast(0) opacity(0.2);
+}
+
+.profile-picture {
+  border-radius: 50%;
+  object-fit: cover;
 }

@@ -17,26 +17,8 @@
     {% if page %}
       <div class="columns is-multiline">
       {% for quiz in page %}
-        <div class="column is-one-third">
-          <a href="{% url 'quizzes:quiz' quiz.slug %}">
-            <div class="quiz-image-container">
-              <img class="quiz-image blurhash"
-                  {% if quiz.image %}
-                  data-blurhash="{{ quiz.image_blurhash }}"
-                  data-src="{{ MEDIA_URL }}{{ quiz.image }}"
-                  {% endif %}
-                  >
-              <div class="quiz-image-overlay"></div>
-              <div class="quiz-image-info has-text-light">
-                <small>
-                  Created {{ quiz.created_date|timesince }} ago
-                  by <strong>{{ quiz.author.username }}</strong>
-                </small>
-              </div>
-            </div>
-            <p class="subtitle has-text-grey is-size-4 mt-4">{{ quiz.title }}</p>
-            <div class="content mb-6">{{ quiz.description }}</div>
-          </a>
+        <div class="column is-4">
+          {% include 'quizzes/quiz_card.html' %}
         </div>
       {% endfor %}
       </div>
@@ -49,27 +31,7 @@
              src="{% static 'vendor/img/tree-swing.svg' %}">
         <h4 class="mt-3">No quizzes found.</h4>
 
-        <form method="GET" action="/">
-          <div class="field has-addons mt-6">
-            <div class="control is-expanded">
-              <input class="input is-light"
-                      name="q"
-                      value="{{ request.GET.q }}"
-                      type="text"
-                      placeholder="Quiz name, ...">
-            </div>
-            <div class="control">
-              <a type="submit" href="/" class="button is-light">
-                <i class="fas fa-times-circle"></i>
-              </a>
-            </div>
-            <div class="control">
-              <button type="submit" class="button is-light">
-                <i class="fas fa-search"></i>
-              </button>
-            </div>
-          </div>
-        </form>
+        {% include 'quizzes/quiz_search_form.html' %}
       </div>
     {% endif %}
   </section>

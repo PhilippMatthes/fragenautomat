@@ -11,66 +11,65 @@
 {% block body %}
 
 <div class="container">
-  {% for question in page %}
-    <div class="box my-6">
-      <div>
-        <small class="has-text-grey">Question {{ page.number }}</small>
-        {% if question.description_image %}
-          <img class="question-image mt-3 blurhash"
-              data-blurhash="{{ question.description_image_blurhash }}"
-              data-src="{{ MEDIA_URL }}{{ question.description_image }}"
-              >
-        {% endif %}
-        <div class="markdown mt-3 mb-3"
-            data-markdown="{{ question.description }}"></div>
-      </div>
-
-      <hr>
-
-      <a class="mt-3 mask has-text-black" data-target="#answer-{{ question.id }}">
-        <small class="has-text-grey">Answer</small>
-        <div id="answer-{{ question.id }}" class="is-masked">
-          {% if question.solution_image %}
+  <div class="columns is-centered">
+    {% for question in page %}
+      <div class="column is-8">
+      <div class="box">
+        <div>
+          <small class="has-text-grey">Question {{ page.number }}</small>
+          {% if question.description_image %}
             <img class="question-image mt-3 blurhash"
-                data-blurhash="{{ question.solution_image_blurhash }}"
-                data-src="{{ MEDIA_URL }}{{ question.solution_image }}"
+                data-blurhash="{{ question.description_image_blurhash }}"
+                data-src="{{ MEDIA_URL }}{{ question.description_image }}"
                 >
           {% endif %}
-          <div class="markdown mt-3"
-              data-markdown="{{ question.solution }}"></div>
+          <div class="markdown mt-3 mb-3"
+              data-markdown="{{ question.description }}"></div>
         </div>
-      </a>
 
-      <hr>
+        <hr>
 
-      {% include 'pagination.html' %}
-    </div>
-  {% endfor %}
-
-  <nav>
-    <div class="columns is-centered">
-      <div class="column is-6">
-        <div class="box">
-          <p class="has-text-centered mb-4 has-text-grey">
-            <small>Question Overview</small>
-          </p>
-          <div class="columns is-mobile is-multiline calendar has-text-centered">
-            {% for page_number in page.paginator.page_range %}
-              <div class="column is-2 has-text-centered day-container">
-                <div class="day {% if page_number == page.number %}has-background-link{% endif %}">
-                  <a class="{% if page_number == page.number %}has-text-light{% endif %}"
-                    href="?p={{ page_number }}">
-                    <h4>{{ page_number }}</h4>
-                  </a>
-                </div>
-              </div>
-            {% endfor %}
+        <a class="mt-3 mask has-text-black has-text-justified" data-target="#answer-{{ question.id }}">
+          <small class="has-text-grey">Answer</small>
+          <div id="answer-{{ question.id }}" class="is-masked">
+            {% if question.solution_image %}
+              <img class="question-image mt-3 blurhash"
+                  data-blurhash="{{ question.solution_image_blurhash }}"
+                  data-src="{{ MEDIA_URL }}{{ question.solution_image }}"
+                  >
+            {% endif %}
+            <div class="markdown mt-3"
+                data-markdown="{{ question.solution }}"></div>
           </div>
+        </a>
+      </div>
+      </div>
+    {% endfor %}
+
+    <nav class="column is-4">
+      {% include 'pagination.html' with hide_numbers=True %}
+      <hr>
+      <div class="control is-expanded">
+        <button class="button is-fullwidth collapse" data-target="#calendar-menu">
+          <i class="fas fa-bars mr-2"></i> Show Full Menu
+        </button>
+      </div>
+      <div id="calendar-menu" class="box is-hidden mt-3">
+        <div class="columns is-mobile is-multiline calendar has-text-centered">
+          {% for page_number in page.paginator.page_range %}
+            <div class="column is-2 has-text-centered day-container">
+              <div class="day {% if page_number == page.number %}has-background-link{% endif %}">
+                <a class="{% if page_number == page.number %}has-text-light{% endif %}"
+                  href="?p={{ page_number }}">
+                  <h4>{{ page_number }}</h4>
+                </a>
+              </div>
+            </div>
+          {% endfor %}
         </div>
       </div>
-    </div>
-  </nav>
-
+    </nav>
+  </div>
 </div>
 
 {% endblock %}

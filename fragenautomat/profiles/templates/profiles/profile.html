@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<div class="container">
+  <div class="columns">
+    <div class="column is-4">
+      <article class="box">
+        <figure class="image is-square has-background-light" style="border-radius: 50%">
+          {% if profile.icon %}
+          <img alt="icon" class="profile-picture"
+               src="{{ MEDIA_URL }}{{ profile.icon }}">
+          {% endif %}
+        </figure>
+        <div class="content mt-6 has-text-justified">
+          <p>
+            {% if profile.real_name %}
+            <strong>{{ profile.real_name }}</strong>
+            {% else %}
+            {% endif %}
+            <small>@{{ profile.user.username }}</small>
+          </p>
+          <p>
+            {% if profile.description %}
+              {{ profile.description }}
+            {% endif %}
+          </p>
+        </div>
+      </article>
+      {% if form %}
+        <div id="profile-form" class="box">
+          <form method="POST" enctype="multipart/form-data">
+            {% include 'form.html' %}
+            <button class="button is-link">Update Profile</button>
+          </form>
+        </div>
+      {% endif %}
+    </div>
+    <div class="column is-8">
+      <div class="box">
+        <div class="columns is-multiline">
+        {% for quiz in page %}
+          <div class="column is-6">
+            {% include 'quizzes/quiz_card.html' %}
+          </div>
+        {% endfor %}
+        </div>
+        {% include 'pagination.html' %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

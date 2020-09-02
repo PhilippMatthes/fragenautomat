@@ -1,9 +1,7 @@
-from django.views.generic import View
+from django.views.generic import View, TemplateView
 from django.template.response import TemplateResponse
 from django.core.paginator import Paginator, InvalidPage
-from django.http import Http404, HttpResponseRedirect
-from django.contrib.auth import login
-from django.contrib.auth.forms import UserCreationForm
+from django.http import Http404
 from django.db.models import Q
 
 from quizzes.models import Quiz
@@ -30,24 +28,13 @@ class IndexView(View):
         })
 
 
-class LegalNotesView(View):
-    def get(self, request):
-        return TemplateResponse(request, 'legal.html')
+class LegalNotesView(TemplateView):
+    template_name = 'legal.html'
 
 
-class RegistrationView(View):
-    def get(self, request):
-        form = UserCreationForm()
-        return TemplateResponse(request, 'registration/register.html', {
-            'form': form,
-        })
+def not_found(request, exception=None):
+    return TemplateResponse(request, 'errors/not_found.html')
 
-    def post(self, request):
-        form = UserCreationForm(request.POST)
-        if not form.is_valid():
-            return TemplateResponse(request, 'registration/register.html', {
-                'form': form,
-            })
-        user = form.save()
-        login(request, user)
-        return HttpResponseRedirect('/')
+
+def server_error(request, exception=None):
+    return TemplateResponse(request, 'errors/server_error.html')

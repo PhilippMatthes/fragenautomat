@@ -7,6 +7,8 @@
   <a href="?p={{ page.next_page_number }}"
      class="pagination-next">Next</a>
   {% endif %}
+
+  {% if not hide_numbers %}
   <ul class="pagination-list">
     {% if page.has_previous %}
     <li>
@@ -50,4 +52,5 @@
     </li>
     {% endif %}
   </ul>
+  {% endif %}
 </nav>

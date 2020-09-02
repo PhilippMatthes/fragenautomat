@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block body %}
+
+<div class="container has-text-centered">
+  <img id="legal" alt="error" src="{% static 'vendor/img/server_error.svg' %}">
+  <h1 class="mt-3">There was a server error.</h1>
+  <p>If this problem persists, please <a href="mailto:mail@fragenautom.at">write us an email</a>.</p>
+</div>
+
+{% endblock %}

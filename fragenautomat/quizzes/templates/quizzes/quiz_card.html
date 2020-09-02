@@ -1,0 +1,19 @@
+<a href="{% url 'quizzes:quiz' quiz.slug %}">
+  <div class="quiz-image-container">
+    <img class="quiz-image blurhash"
+        {% if quiz.image %}
+        data-blurhash="{{ quiz.image_blurhash }}"
+        data-src="{{ MEDIA_URL }}{{ quiz.image }}"
+        {% endif %}
+        >
+    <div class="quiz-image-overlay"></div>
+    <div class="quiz-image-info has-text-light">
+      <small>
+        Created {{ quiz.created_date|timesince }} ago
+        by <strong>{{ quiz.author.username }}</strong>
+      </small>
+    </div>
+  </div>
+  <p class="subtitle has-text-grey is-size-4 mt-4">{{ quiz.title }}</p>
+  <div class="content mb-6">{{ quiz.description }}</div>
+</a>
