@@ -16,3 +16,11 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.username
+
+
+class Token(models.Model):
+    value = models.CharField(primary_key=True, max_length=32)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'Token {self.value[:6]}... for user {self.user}'

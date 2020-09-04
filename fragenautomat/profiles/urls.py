@@ -14,6 +14,7 @@ urlpatterns = [
         template_name='profiles/registration/logout.html'
     ), name='logout'),
     path('register/', views.RegistrationView.as_view(), name='registration'),
+    path('activation/', views.ActivationView.as_view(), name='activation'),
 
     path('<slug:username>/', views.ProfileView.as_view(), name='profile'),
     path(

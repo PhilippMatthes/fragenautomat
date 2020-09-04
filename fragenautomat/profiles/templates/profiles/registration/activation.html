@@ -1,0 +1,12 @@
+Hi, {{ token.user.username }}!
+
+
+Thanks for signing up at {{ request.META.HTTP_HOST }}. Here is your account activation link:
+
+{{ request.scheme }}://{{ request.META.HTTP_HOST }}{% url 'profiles:activation' %}?k={{ token.value }}
+
+Didn't sign up there? Just ignore this email.
+
+
+Best Regards,
+The {{ request.META.HTTP_HOST }} Team.
