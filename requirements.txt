@@ -1,2 +1,4 @@
-Django==3.0.8
-blurhash-python==1.0.2
+Django==3.0.8 # http server framework
+blurhash-python==1.0.2 # image lazy loading
+huey==2.3.0 # async task queue
+redis==3.5.3 # in-memory key value store

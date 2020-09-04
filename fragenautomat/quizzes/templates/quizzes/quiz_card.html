@@ -7,8 +7,11 @@
           {% endif %}
           >
     <hr>
-    <p class="subtitle is-size-4">{{ quiz.title }}</p>
-    <div class="content">{{ quiz.description }}</div>
+    <p class="subtitle mb-2 is-size-4">{{ quiz.title }}</p>
+    <div class="content mb-2">{{ quiz.description }}</div>
+    <div class="content has-text-grey-light mb-2">
+      <i class="fas fa-eye mr-2"></i>{{ quiz.views }} Views
+    </div>
   </a>
 
   <hr>

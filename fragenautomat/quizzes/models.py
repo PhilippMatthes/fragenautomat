@@ -16,6 +16,8 @@ class Quiz(models.Model):
     description = models.TextField()
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    views = models.PositiveIntegerField(default=0)
+
     image = models.ImageField(
         upload_to=quiz_image_upload_path,
         null=True, blank=True
@@ -40,6 +42,7 @@ def question_solution_image_upload_path(question, filename):
 
 class Question(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    scoped_id = models.PositiveIntegerField()
 
     description = models.TextField(null=True, blank=True)
     description_image = models.ImageField(
@@ -57,3 +60,9 @@ class Question(models.Model):
 
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
+
+    @property
+    def page_in_quiz(self):
+        # since a Django paginator starts counting with 1,
+        # we need to add 1 to the 0-based scoped id
+        return self.scoped_id + 1

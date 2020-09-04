@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'huey.contrib.djhuey',
+
     'quizzes',
     'profiles',
 ]
@@ -83,6 +85,18 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
+}
+
+
+# Huey configuration
+# https://huey.readthedocs.io/en/latest/django.html
+
+HUEY = {
+    'huey_class': 'huey.RedisHuey',
+    'connection': {
+        'host': 'localhost',
+        'port': 6379,
+    },
 }
 
 
