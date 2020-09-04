@@ -78,12 +78,20 @@
   {% block head %}{% endblock %}
 </head>
 
-<body class="mx-4">
+<body>
   {% include 'navigation.html' %}
 
-  <hr class="mt-0">
+  <main class="mt-6 mx-3">
+    {% if messages %}
+      <div class="container mb-6">
+        {% for message in messages %}
+          <div class="notification is-{{ message.level }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
 
-  <main class="mt-6">
     {% block body %}{% endblock %}
   </main>
 
@@ -103,6 +111,7 @@
   <script src="{% static 'vendor/js/anime.min.js' %}"></script>
 
   <script src="{% static 'js/blurhash.loader.js' %}"></script>
+  <script src="{% static 'js/collapse.loader.js' %}"></script>
   {% block extrabody %}{% endblock %}
 </body>
 

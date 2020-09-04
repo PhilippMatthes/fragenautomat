@@ -1,56 +1,58 @@
-<nav class="pagination" role="navigation" aria-label="pagination">
-  {% if page.has_previous %}
-  <a href="?p={{ page.previous_page_number }}"
-     class="pagination-previous">Previous</a>
-  {% endif %}
-  {% if page.has_next %}
-  <a href="?p={{ page.next_page_number }}"
-     class="pagination-next">Next</a>
-  {% endif %}
-
-  {% if not hide_numbers %}
-  <ul class="pagination-list">
+{% if page.paginator.num_pages > 1 %}
+  <nav class="pagination" role="navigation" aria-label="pagination">
     {% if page.has_previous %}
-    <li>
-      <a href="?p=1" class="pagination-link" aria-label="Goto page 1">
-        <i class="fas fa-backward"></i>
-      </a>
-    </li>
-      {% if page.previous_page_number != 1 %}
-      <li>
-        <a href="?p={{ page.previous_page_number }}"
-           class="pagination-link"
-           aria-label="Goto page {{ page.previous_page_number }}">
-          {{ page.previous_page_number }}
-        </a>
-      </li>
-      {% endif %}
+    <a href="?p={{ page.previous_page_number }}"
+      class="pagination-previous">Previous</a>
     {% endif %}
-    <li>
-      <a class="pagination-link is-current"
-         aria-label="Page {{ page.number }}" aria-current="page">
-        {{ page.number }}
-      </a>
-    </li>
-
     {% if page.has_next %}
-      {% if page.next_page_number != page.paginator.num_pages %}
+    <a href="?p={{ page.next_page_number }}"
+      class="pagination-next">Next</a>
+    {% endif %}
+
+    {% if not hide_numbers %}
+    <ul class="pagination-list">
+      {% if page.has_previous %}
       <li>
-        <a href="?p={{ page.next_page_number }}"
-           class="pagination-link"
-           aria-label="Goto page {{ page.next_page_number }}">
-          {{ page.next_page_number }}
+        <a href="?p=1" class="pagination-link" aria-label="Goto page 1">
+          <i class="fas fa-backward"></i>
         </a>
       </li>
+        {% if page.previous_page_number != 1 %}
+        <li>
+          <a href="?p={{ page.previous_page_number }}"
+            class="pagination-link"
+            aria-label="Goto page {{ page.previous_page_number }}">
+            {{ page.previous_page_number }}
+          </a>
+        </li>
+        {% endif %}
       {% endif %}
-    <li>
-    <a href="?p={{ page.paginator.num_pages }}"
-       class="pagination-link"
-       aria-label="Goto page {{ page.paginator.num_pages }}">
-      <i class="fas fa-forward"></i>
-    </a>
-    </li>
+      <li>
+        <a class="pagination-link is-current"
+          aria-label="Page {{ page.number }}" aria-current="page">
+          {{ page.number }}
+        </a>
+      </li>
+
+      {% if page.has_next %}
+        {% if page.next_page_number != page.paginator.num_pages %}
+        <li>
+          <a href="?p={{ page.next_page_number }}"
+            class="pagination-link"
+            aria-label="Goto page {{ page.next_page_number }}">
+            {{ page.next_page_number }}
+          </a>
+        </li>
+        {% endif %}
+      <li>
+      <a href="?p={{ page.paginator.num_pages }}"
+        class="pagination-link"
+        aria-label="Goto page {{ page.paginator.num_pages }}">
+        <i class="fas fa-forward"></i>
+      </a>
+      </li>
+      {% endif %}
+    </ul>
     {% endif %}
-  </ul>
-  {% endif %}
-</nav>
+  </nav>
+{% endif %}

@@ -31,7 +31,11 @@
              src="{% static 'vendor/img/tree-swing.svg' %}">
         <h4 class="mt-3">No quizzes found.</h4>
 
-        {% include 'quizzes/quiz_search_form.html' %}
+        <div class="columns is-centered">
+          <div class="column is-4">
+          {% include 'quizzes/quiz_search_form.html' %}
+          </div>
+        </div>
       </div>
     {% endif %}
   </section>

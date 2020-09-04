@@ -1,0 +1,25 @@
+<a href="{% url 'quizzes:quiz' quiz.slug %}">
+  <article class="media">
+    <div class="media-left">
+      <figure class="image is-64x64">
+        <img class="quiz-image blurhash"
+          {% if quiz.image %}
+          data-blurhash="{{ quiz.image_blurhash }}"
+          data-src="{{ MEDIA_URL }}{{ quiz.image }}"
+          {% endif %}
+          >
+      </figure>
+    </div>
+    <div class="media-content">
+      <div class="content">
+        <p>
+          <strong>{{ quiz.title }}</strong> <br>
+          <small>@{{ quiz.author.username }}</small> <small>{{ quiz.created_date|timesince }} ago</small>
+        </p>
+        <p>
+          {{ quiz.description }}
+        </p>
+      </div>
+    </div>
+  </article>
+</a>

@@ -1,15 +1,17 @@
 {% extends "base.html" %}
 
+{% load static %}
+
 {% block body %}
 
 <div class="container">
 
   <div class="columns is-centered">
-    <div class="column is-6 box">
-      <h4>Registration</h4>
-      <hr>
+    <div class="column is-4">
+      <img alt="login" src="{% static 'vendor/img/join.svg' %}">
+      <h4 class="mt-6 has-text-centered">Registration</h4>
 
-      <form method="POST">
+      <form method="POST" class="box mt-4">
         {% include 'form.html' %}
 
         <input type="hidden" name="next" value="{{ next }}">

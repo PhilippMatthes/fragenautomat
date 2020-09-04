@@ -5,19 +5,23 @@
 {% block body %}
 
 <div class="container has-text-centered">
-  <img id="legal" alt="contact" src="{% static 'vendor/img/contact.svg' %}">
-  <h1 class="mt-3">Legal Notes and Contact</h1>
-  <hr>
-  <h4 id="contact">Responsible for this website</h4>
-  <p>Philipp Matthes</p>
-  <p>Clara-Viebig-Straße 9</p>
-  <p>01159 Dresden</p>
-  <p>&laquo;catchall&raquo;@fragenautom.at</p>
-  <p class="mt-3">This Site does not use cookies or any third party services and is solely for educational purposes.</p>
-  <p>For more technical information please contact me or <a target="_blank" href="https://github.com/fragenautomat/website">read this website's code.</a></p>
-  <hr>
-  <h4>Copyright claims on content</h4>
-  <p><strong>If you hold the rights on any of the materials on this website and wish them to be removed, please contact me directly and I will remove these contents respectively.</strong></p>
+  <div class="columns is-centered">
+    <div class="column is-4">
+      <img id="legal" alt="contact" src="{% static 'vendor/img/contact.svg' %}">
+      <h2 class="mt-3">Legal Notes and Imprint</h2>
+      <hr>
+      <h4 id="contact">Responsible for this website</h4>
+      <p>Philipp Matthes</p>
+      <p>Clara-Viebig-Straße 9</p>
+      <p>01159 Dresden</p>
+      <p>&laquo;catchall&raquo;@fragenautom.at</p>
+      <p class="mt-3">This Site does not use cookies or any third party services and is solely for educational purposes.</p>
+      <p>For more technical information please contact me or <a target="_blank" href="https://github.com/fragenautomat/website">read this website's code.</a></p>
+      <hr>
+      <h4>Copyright claims on content</h4>
+      <p><strong>If you hold the rights on any of the materials on this website and wish them to be removed, please contact me directly and I will remove these contents respectively.</strong></p>
+    </div>
+  </div>
 </div>
 
 {% endblock %}

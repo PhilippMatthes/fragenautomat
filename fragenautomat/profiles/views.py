@@ -5,19 +5,25 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 from django.db import transaction
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.core.paginator import Paginator, InvalidPage
+from django.contrib import messages
+
 
 from profiles.models import Profile
-from profiles.forms import ProfileForm
+from profiles.forms import ProfileIconForm, ProfileDetailsForm
 
 
-class ProfileView(LoginRequiredMixin, View):
-    def get_context_data(self, username):
+class ProfileView(TemplateView):
+    template_name = 'profiles/profile.html'
+
+    def get_context_data(self, username, **kwargs):
+        context = super().get_context_data(**kwargs)
+
         profile = get_object_or_404(Profile, user__username=username)
 
         quizzes = profile.user.quiz_set.all()
-        paginator = Paginator(quizzes, 4)
+        paginator = Paginator(quizzes, 10)
         page_number_tainted = self.request.GET.get('p', 1)
         try:
             page = paginator.page(page_number_tainted)
@@ -25,50 +31,47 @@ class ProfileView(LoginRequiredMixin, View):
             # page was empty or tainted page number was not an integer
             raise Http404
 
-        return {
-            'profile': profile,
-            'page': page,
-        }
+        context['profile'] = profile
+        context['page'] = page
 
-    def get(self, request, username):
-        context = self.get_context_data(username)
+        if not self.request.user.is_authenticated:
+            return context
+        if not self.request.user.username == username:
+            return context
 
-        if self.request.user.username == username:
-            form = ProfileForm(instance=context['profile'])
-        else:
-            form = None
+        context['icon_form'] = ProfileIconForm(instance=profile)
+        context['details_form'] = ProfileDetailsForm(instance=profile)
+        return context
 
-        return TemplateResponse(request, 'profiles/profile.html', {
-            'form': form, **context
-        })
 
+class ProfileDetailsChangeView(LoginRequiredMixin, View):
     def post(self, request, username):
-        context = self.get_context_data(username)
-
-        if request.user.username != username:
-            raise Http404
-        form = ProfileForm(request.POST, instance=context['profile'])
-        if not form.is_valid():
-            return HttpResponseBadRequest()
-        form.save()
-        return TemplateResponse(request, 'profiles/profile.html', {
-            'form': form, **context
-        })
-
-
-class ProfileChangeView(LoginRequiredMixin, View):
-    def post(self, request, username):
-        if request.user.username != username:
+        if not request.user.username == username:
             raise Http404
         profile = get_object_or_404(Profile, user__username=username)
-        form = ProfileForm(request.POST)
+
+        form = ProfileDetailsForm(request.POST, instance=profile)
         if not form.is_valid():
             return HttpResponseBadRequest()
         form.save()
-        return TemplateResponse(request, 'profiles/profile.html', {
-            'profile': profile, 'page': page, 'form': form
-        })
+        messages.success(request, 'Your profile info was updated!')
+        return redirect('profiles:profile', username=username)
 
+
+class ProfileIconChangeView(LoginRequiredMixin, View):
+    def post(self, request, username):
+        if not request.user.username == username:
+            raise Http404
+        profile = get_object_or_404(Profile, user__username=username)
+
+        form = ProfileIconForm(request.POST, instance=profile)
+        if not form.is_valid():
+            return HttpResponseBadRequest()
+        profile = form.save(commit=False)
+        profile.icon = request.FILES.get('icon')
+        profile.save()
+        messages.success(request, 'Your profile icon was updated!')
+        return redirect('profiles:profile', username=username)
 
 
 class RegistrationView(View):

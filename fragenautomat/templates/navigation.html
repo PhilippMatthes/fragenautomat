@@ -1,81 +1,79 @@
 {% load static %}
 
-<div class="container">
-<nav class="navbar" role="navigation" aria-label="main navigation">
-  <div class="navbar-brand">
-    <a class="navbar-item is-size-4 has-text-link" href="/">
-      <img class="mr-3" alt="logo" src="{% static 'img/fragenautomat-logo-100.png' %}">
-      fragenautom.at
-    </a>
-
-    <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbar" onclick="document.querySelector('.navbar-menu').classList.toggle('is-active');">
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-    </a>
-  </div>
-
-  <div id="navbar" class="navbar-menu">
-    <div class="navbar-start">
-      {% if not user.is_authenticated %}
-      <a href="{% url 'profiles:registration' %}" class="navbar-item">
-        Register
-      </a>
-      <a href="{% url 'profiles:login'%}" class="navbar-item">
-        Login
-      </a>
-      {% else %}
-      <a href="{% url 'profiles:profile' request.user.username %}" class="navbar-item">
-        {{ request.user.username }}
-      </a>
-      <a href="{% url 'profiles:logout' %}" class="navbar-item">
-        Logout
-      </a>
-      {% endif %}
-
-      <div class="navbar-item has-dropdown is-hoverable">
-        <a class="navbar-link">
-          More
+<div class="nav-container">
+  <div class="container">
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <a class="navbar-item is-size-4 has-text-link" href="/">
+          <img class="mr-3" alt="logo" src="{% static 'img/fragenautomat-logo-100.png' %}">
+          fragenautom.at
         </a>
 
-        <div class="navbar-dropdown">
-          <a href="{% url 'legal' %}" class="navbar-item">
-            Legal Notes and Imprint
-          </a>
-          <hr class="navbar-divider">
-          <a class="navbar-item"
-             href="https://github.com/fragenautomat/website/issues" target="_blank">
-            Report an issue
-          </a>
-        </div>
+        <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbar" onclick="document.querySelector('.navbar-menu').classList.toggle('is-active');">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
       </div>
-    </div>
 
-    <div class="navbar-end mt-3">
-      <form method="GET" action="/">
-        <div class="navbar-item">
-          <div class="field has-addons">
-            <div class="control">
-              <input class="input"
-                      name="q"
-                      value="{{ request.GET.q }}"
-                      type="text"
-                      placeholder="Quiz name, ...">
-            </div>
-            <div class="control">
-              <a type="submit" href="/" class="button is-light">
-                <i class="fas fa-times-circle"></i>
+      <div id="navbar" class="navbar-menu">
+        <div class="navbar-start">
+          {% if not user.is_authenticated %}
+          <a href="{% url 'profiles:registration' %}" class="navbar-item">
+            Register
+          </a>
+          <a href="{% url 'profiles:login'%}" class="navbar-item">
+            Login
+          </a>
+          {% else %}
+          <a href="{% url 'profiles:profile' request.user.username %}" class="navbar-item">
+            <i class="fas fa-user mr-2"></i>{{ request.user.username }}
+          </a>
+          <a href="{% url 'profiles:logout' %}" class="navbar-item">
+            Logout
+          </a>
+          {% endif %}
+
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link">
+              More
+            </a>
+
+            <div class="navbar-dropdown">
+              <a href="{% url 'legal' %}" class="navbar-item">
+                Legal Notes and Imprint
               </a>
-            </div>
-            <div class="control">
-              <button type="submit" class="button is-light">
-                <i class="fas fa-search"></i>
-              </button>
+              <hr class="navbar-divider">
+              <a class="navbar-item"
+                href="https://github.com/fragenautomat/website/issues" target="_blank">
+                Report an issue
+              </a>
             </div>
           </div>
         </div>
-      </form>
-    </div>
+
+        <div class="navbar-end mt-3">
+          <form method="GET" action="/">
+            <div class="navbar-item">
+              <div class="field has-addons">
+                <div class="control">
+                  <input class="input"
+                          name="q"
+                          value="{{ request.GET.q }}"
+                          type="text"
+                          placeholder="Quiz, User">
+                </div>
+                <div class="control">
+                  <button type="submit" class="button is-link">
+                    <i class="fas fa-search mr-2"></i> Search
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </nav>
   </div>
-</nav>
+  <hr class="mt-0">
 </div>

@@ -13,7 +13,7 @@
 <div class="container">
   <div class="columns is-centered">
     {% for question in page %}
-      <div class="column is-8">
+      <div class="column is-7">
       <div class="box">
         <div>
           <small class="has-text-grey">Question {{ page.number }}</small>
@@ -46,7 +46,7 @@
       </div>
     {% endfor %}
 
-    <nav class="column is-4">
+    <nav class="column is-4 is-offset-1">
       {% include 'pagination.html' with hide_numbers=True %}
       <hr>
       <div class="control is-expanded">
@@ -78,7 +78,6 @@
 <script src="{% static 'vendor/js/showdown.min.js' %}"></script>
 
 <script src="{% static 'js/showdown.loader.js' %}"></script>
-<script src="{% static 'js/collapse.loader.js' %}"></script>
 <script src="{% static 'js/mask.loader.js' %}"></script>
 
 {% endblock %}

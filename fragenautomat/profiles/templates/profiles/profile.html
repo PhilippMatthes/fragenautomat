@@ -6,11 +6,8 @@
   <div class="columns">
     <div class="column is-4">
       <article class="box">
-        <figure class="image is-square has-background-light" style="border-radius: 50%">
-          {% if profile.icon %}
-          <img alt="icon" class="profile-picture"
-               src="{{ MEDIA_URL }}{{ profile.icon }}">
-          {% endif %}
+        <figure class="image is-square has-background-light round">
+          {% include 'profiles/profile_icon.html' %}
         </figure>
         <div class="content mt-6 has-text-justified">
           <p>
@@ -26,25 +23,49 @@
             {% endif %}
           </p>
         </div>
+        {% if details_form or icon_form %}
+          <div class="control is-expanded">
+            <button class="button is-fullwidth collapse" data-target="#profile-form">
+              Change Profile
+            </button>
+          </div>
+        {% endif %}
       </article>
-      {% if form %}
-        <div id="profile-form" class="box">
-          <form method="POST" enctype="multipart/form-data">
-            {% include 'form.html' %}
-            <button class="button is-link">Update Profile</button>
+      {% if details_form or icon_form %}
+        <div id="profile-form" class="box is-hidden">
+          {% if icon_form %}
+            <form method="POST"
+                  action="{% url 'profiles:profile_icon_change' profile.user.username %}"
+                  enctype="multipart/form-data">
+              {% include 'form.html' with form=icon_form %}
+              <div class="control is-expanded">
+                <button id="update-icon" class="button is-fullwidth is-link">Update Icon</button>
+              </div>
+            </form>
+          {% endif %}
+          <hr>
+          {% if details_form %}
+          <form method="POST"
+                action="{% url 'profiles:profile_details_change' profile.user.username %}">
+            {% include 'form.html' with form=details_form %}
+            <div class="control is-expanded">
+              <button class="button is-fullwidth is-link">Update Details</button>
+            </div>
           </form>
+          {% endif %}
         </div>
       {% endif %}
     </div>
-    <div class="column is-8">
-      <div class="box">
-        <div class="columns is-multiline">
+    <div class="column is-7 is-offset-1">
+      <div class="">
+        <h3 class="mb-3">Quizzes</h3>
+        <hr>
         {% for quiz in page %}
-          <div class="column is-6">
-            {% include 'quizzes/quiz_card.html' %}
-          </div>
+          {% include 'quizzes/quiz_list_item.html' %}
+          {% if not forloop.last %}
+            <hr>
+          {% endif %}
         {% endfor %}
-        </div>
         {% include 'pagination.html' %}
       </div>
     </div>
@@ -52,3 +73,34 @@
 </div>
 
 {% endblock %}
+
+{% if icon_form %}
+  {% block extrabody %}
+  <script>
+    (function() {
+      const iconBlurhashInput = document.querySelector('input[name="icon_blurhash"]');
+      const iconInput = document.querySelector('input[name="icon"]');
+      const iconButton = document.querySelector('button#update-icon');
+      const reader = new FileReader();
+
+      iconInput.addEventListener('change', function() {
+        iconButton.classList.add('is-loading');
+        iconButton.disabled = true;
+        reader.readAsDataURL(iconInput.files[0]);
+      });
+
+      reader.addEventListener('load', function() {
+        const image = new Image();
+        image.src = reader.result;
+        image.width = 512;
+        image.height = 512;
+        const imageData = blurhash.getImageData(image);
+        const hash = blurhash.encode(imageData, 512, 512, 4, 3);
+        iconBlurhashInput.value = hash;
+        iconButton.disabled = false;
+        iconButton.classList.remove('is-loading');
+      });
+    })();
+  </script>
+  {% endblock %}
+{% endif %}

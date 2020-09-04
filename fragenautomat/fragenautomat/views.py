@@ -13,7 +13,9 @@ class IndexView(View):
         query = request.GET.get('q')
         if query:
             quizzes = quizzes.filter(
-                Q(title__icontains=query) | Q(description__icontains=query)
+                Q(title__icontains=query) |
+                Q(description__icontains=query) |
+                Q(author__username__icontains=query)
             )
 
         paginator = Paginator(quizzes, 9)

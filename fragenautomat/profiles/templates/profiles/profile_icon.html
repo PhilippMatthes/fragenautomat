@@ -1,0 +1,6 @@
+<img alt="profile" class="profile-icon blurhash round"
+     {% if profile.icon %}
+     data-blurhash="{{ profile.icon_blurhash }}"
+     data-src="{{ MEDIA_URL }}{{ profile.icon }}"
+     {% endif %}
+     >
