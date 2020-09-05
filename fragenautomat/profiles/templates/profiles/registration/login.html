@@ -28,7 +28,8 @@
       {% endif %}
 
       <form method="POST" class="box mt-4">
-        {% include 'form.html' %}
+        {% csrf_token %}
+        {{ form.as_p }}
 
         <input type="hidden" name="next" value="{{ next }}">
 

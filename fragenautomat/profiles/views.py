@@ -1,7 +1,6 @@
-from django.views.generic import View, TemplateView
+from django.views.generic import View
 from django.http import Http404, HttpResponseBadRequest
 from django.template.response import TemplateResponse
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
 from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect
@@ -13,15 +12,18 @@ from django.conf import settings
 from django.utils.crypto import get_random_string
 
 from profiles.models import Profile, Token
-from profiles.forms import ProfileIconForm, ProfileDetailsForm
+from profiles.forms import ProfileForm
 
 
-class ProfileView(TemplateView):
+class ProfileView(View):
     template_name = 'profiles/profile.html'
 
-    def get_context_data(self, username, **kwargs):
-        context = super().get_context_data(**kwargs)
+    def has_form_access(self, username):
+        is_own_profile = self.request.user.username == username
+        is_superuser = self.request.user.is_superuser
+        return is_own_profile or is_superuser
 
+    def get(self, request, username):
         profile = get_object_or_404(Profile, user__username=username)
 
         quizzes = profile.user.quiz_set.order_by('-created_date')
@@ -33,46 +35,30 @@ class ProfileView(TemplateView):
             # page was empty or tainted page number was not an integer
             raise Http404
 
-        context['profile'] = profile
-        context['page'] = page
+        context = {
+            'profile': profile,
+            'page': page,
+        }
 
-        if not self.request.user.is_authenticated:
-            return context
-        if not self.request.user.username == username:
-            return context
+        if self.has_form_access(username):
+            context['form'] = ProfileForm(instance=profile)
 
-        context['icon_form'] = ProfileIconForm(instance=profile)
-        context['details_form'] = ProfileDetailsForm(instance=profile)
-        return context
+        return TemplateResponse(request, 'profiles/profile.html', context)
 
-
-class ProfileDetailsChangeView(LoginRequiredMixin, View):
     def post(self, request, username):
-        if not request.user.username == username:
+        if not self.has_form_access(username):
             raise Http404
+
         profile = get_object_or_404(Profile, user__username=username)
-
-        form = ProfileDetailsForm(request.POST, instance=profile)
-        if not form.is_valid():
-            return HttpResponseBadRequest()
-        form.save()
-        messages.success(request, 'Your profile info was updated!')
-        return redirect('profiles:profile', username=username)
-
-
-class ProfileIconChangeView(LoginRequiredMixin, View):
-    def post(self, request, username):
-        if not request.user.username == username:
-            raise Http404
-        profile = get_object_or_404(Profile, user__username=username)
-
-        form = ProfileIconForm(request.POST, instance=profile)
+        form = ProfileForm(request.POST, instance=profile)
         if not form.is_valid():
             return HttpResponseBadRequest()
         profile = form.save(commit=False)
-        profile.icon = request.FILES.get('icon')
+        icon = request.FILES.get('icon')
+        if icon:
+            profile.icon = icon
         profile.save()
-        messages.success(request, 'Your profile icon was updated!')
+        messages.success(request, 'Your profile was updated!')
         return redirect('profiles:profile', username=username)
 
 

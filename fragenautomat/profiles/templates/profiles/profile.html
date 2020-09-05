@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load static %}
+
 {% block body %}
 
 <div class="container">
@@ -23,7 +25,7 @@
             {% endif %}
           </p>
         </div>
-        {% if details_form or icon_form %}
+        {% if form %}
           <div class="control is-expanded">
             <button class="button is-fullwidth collapse" data-target="#profile-form">
               Change Profile
@@ -31,32 +33,21 @@
           </div>
         {% endif %}
       </article>
-      {% if details_form or icon_form %}
-        <div id="profile-form" class="box is-hidden">
-          {% if icon_form %}
-            <form method="POST"
-                  action="{% url 'profiles:profile_icon_change' profile.user.username %}"
-                  enctype="multipart/form-data">
-              {% include 'form.html' with form=icon_form %}
-              <div class="control is-expanded">
-                <button id="update-icon" class="button is-fullwidth is-link">Update Icon</button>
-              </div>
-            </form>
-          {% endif %}
-          <hr>
-          {% if details_form %}
-          <form method="POST"
-                action="{% url 'profiles:profile_details_change' profile.user.username %}">
-            {% include 'form.html' with form=details_form %}
-            <div class="control is-expanded">
-              <button class="button is-fullwidth is-link">Update Details</button>
+      {% if form %}
+        <div id="profile-form" class="box">
+          <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="control is-expanded mt-3">
+              <button class="button is-fullwidth is-link">
+                Update Profile
+              </button>
             </div>
           </form>
-          {% endif %}
         </div>
       {% endif %}
     </div>
-    <div class="column is-7 is-offset-1">
+    <div class="column is-8">
       <div class="">
         <h3 class="mb-3">Quizzes</h3>
         <hr>
@@ -73,34 +64,3 @@
 </div>
 
 {% endblock %}
-
-{% if icon_form %}
-  {% block extrabody %}
-  <script>
-    (function() {
-      const iconBlurhashInput = document.querySelector('input[name="icon_blurhash"]');
-      const iconInput = document.querySelector('input[name="icon"]');
-      const iconButton = document.querySelector('button#update-icon');
-      const reader = new FileReader();
-
-      iconInput.addEventListener('change', function() {
-        iconButton.classList.add('is-loading');
-        iconButton.disabled = true;
-        reader.readAsDataURL(iconInput.files[0]);
-      });
-
-      reader.addEventListener('load', function() {
-        const image = new Image();
-        image.src = reader.result;
-        image.width = 512;
-        image.height = 512;
-        const imageData = blurhash.getImageData(image);
-        const hash = blurhash.encode(imageData, 512, 512, 4, 3);
-        iconBlurhashInput.value = hash;
-        iconButton.disabled = false;
-        iconButton.classList.remove('is-loading');
-      });
-    })();
-  </script>
-  {% endblock %}
-{% endif %}

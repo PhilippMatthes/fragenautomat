@@ -1,0 +1,19 @@
+<div class="control is-expanded">
+  <button class="button is-fullwidth collapse" data-target="#calendar-menu">
+    <i class="fas fa-bars mr-2"></i> Show Full Menu
+  </button>
+</div>
+<div id="calendar-menu" class="box is-hidden mt-3">
+  <div class="columns is-mobile is-multiline calendar has-text-centered">
+    {% for page_number in page.paginator.page_range %}
+      <div class="column is-2 has-text-centered day-container">
+        <div class="day {% if page_number == page.number %}has-background-link{% endif %}">
+          <a class="{% if page_number == page.number %}has-text-light{% endif %}"
+            href="?p={{ page_number }}">
+            <h4>{{ page_number }}</h4>
+          </a>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>

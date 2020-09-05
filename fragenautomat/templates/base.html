@@ -83,12 +83,16 @@
 
   <main class="mt-6 mx-3">
     {% if messages %}
-      <div class="container mb-6">
-        {% for message in messages %}
-          <div class="notification is-{{ message.level }}">
-            {{ message }}
+      <div class="container mb-3">
+        <div class="columns is-centered">
+          <div class="column is-6">
+            {% for message in messages %}
+              <div class="notification is-{{ message.tags }}">
+                <i class="fas fa-info-circle mr-2"></i>{{ message }}
+              </div>
+            {% endfor %}
           </div>
-        {% endfor %}
+        </div>
       </div>
     {% endif %}
 
@@ -110,6 +114,7 @@
   <script src="{% static 'vendor/js/blurhash.min.js' %}"></script>
   <script src="{% static 'vendor/js/anime.min.js' %}"></script>
 
+  <script src="{% static 'js/textarea.loader.js' %}"></script>
   <script src="{% static 'js/blurhash.loader.js' %}"></script>
   <script src="{% static 'js/collapse.loader.js' %}"></script>
   {% block extrabody %}{% endblock %}

@@ -16,8 +16,6 @@ class Quiz(models.Model):
     description = models.TextField()
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    views = models.PositiveIntegerField(default=0)
-
     image = models.ImageField(
         upload_to=quiz_image_upload_path,
         null=True, blank=True

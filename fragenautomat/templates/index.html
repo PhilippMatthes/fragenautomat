@@ -3,9 +3,10 @@
 {% load static %}
 
 {% block head %}
+  {% comment %} Prefetch a quiz, if it is the only result. {% endcomment %}
   {% if page.paginator.count == 1 %}
     {% for quiz in page %}
-      <link rel="prerender" href="{% url 'quizzes:quiz' quiz.slug %}">
+      <link rel="prerender" href="{% url 'quizzes:question' quiz.slug %}">
     {% endfor %}
   {% endif %}
 {% endblock %}

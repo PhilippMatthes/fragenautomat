@@ -12,7 +12,8 @@
       <h4 class="mt-6 has-text-centered">Registration</h4>
 
       <form method="POST" class="box mt-4">
-        {% include 'form.html' %}
+        {% csrf_token %}
+        {{ form.as_p }}
 
         <input type="hidden" name="next" value="{{ next }}">
 

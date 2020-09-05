@@ -12,8 +12,7 @@
 
 <div class="container">
   <div class="columns is-centered">
-    {% for question in page %}
-      <div class="column is-7">
+    <div class="column is-6">
       <div class="box">
         <div>
           <small class="has-text-grey">Question {{ page.number }}</small>
@@ -23,13 +22,14 @@
                 data-src="{{ MEDIA_URL }}{{ question.description_image }}"
                 >
           {% endif %}
-          <div class="markdown mt-3 mb-3"
-              data-markdown="{{ question.description }}"></div>
+          <div id="description"
+               class="markdown mt-3 mb-3"
+               data-markdown="{{ question.description }}"></div>
         </div>
 
         <hr>
 
-        <a class="mt-3 mask has-text-black has-text-justified" data-target="#answer-{{ question.id }}">
+        <a class="mt-3 mask has-text-black" data-target="#answer-{{ question.id }}">
           <small class="has-text-grey">Answer</small>
           <div id="answer-{{ question.id }}" class="is-masked">
             {% if question.solution_image %}
@@ -38,37 +38,36 @@
                   data-src="{{ MEDIA_URL }}{{ question.solution_image }}"
                   >
             {% endif %}
-            <div class="markdown mt-3"
-                data-markdown="{{ question.solution }}"></div>
+            <div id="solution"
+                 class="markdown mt-3"
+                 data-markdown="{{ question.solution }}"></div>
           </div>
         </a>
-      </div>
-      </div>
-    {% endfor %}
 
-    <nav class="column is-4 is-offset-1">
-      {% include 'pagination.html' with hide_numbers=True %}
-      <hr>
-      <div class="control is-expanded">
-        <button class="button is-fullwidth collapse" data-target="#calendar-menu">
-          <i class="fas fa-bars mr-2"></i> Show Full Menu
-        </button>
+        {% if form %}
+          <button class="button collapse mt-3" data-target="#edit-form">
+            <i class="fas fa-edit mr-2"></i> Edit Question
+          </button>
+        {% endif %}
       </div>
-      <div id="calendar-menu" class="box is-hidden mt-3">
-        <div class="columns is-mobile is-multiline calendar has-text-centered">
-          {% for page_number in page.paginator.page_range %}
-            <div class="column is-2 has-text-centered day-container">
-              <div class="day {% if page_number == page.number %}has-background-link{% endif %}">
-                <a class="{% if page_number == page.number %}has-text-light{% endif %}"
-                  href="?p={{ page_number }}">
-                  <h4>{{ page_number }}</h4>
-                </a>
-              </div>
-            </div>
-          {% endfor %}
+
+      <div class="box">
+        {% include 'pagination.html' with hide_numbers=True %}
+        {% include 'calendar_menu.html' %}
+      </div>
+    </div>
+
+    {% if form %}
+      <div id="edit-form" class="column is-6 is-hidden">
+        <div class="box">
+          <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="button is-link">Update Question</button>
+          </form>
         </div>
       </div>
-    </nav>
+    {% endif %}
   </div>
 </div>
 
@@ -79,5 +78,5 @@
 
 <script src="{% static 'js/showdown.loader.js' %}"></script>
 <script src="{% static 'js/mask.loader.js' %}"></script>
-
+<script src="{% static 'js/editor.loader.js' %}"></script>
 {% endblock %}

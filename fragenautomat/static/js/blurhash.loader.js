@@ -17,4 +17,42 @@
       });
     });
   }
-}());
+})();
+
+(function() {
+  for (let form of document.querySelectorAll('form')) {
+    const submitButton = form.querySelector('button');
+    for (let input of form.querySelectorAll('input[type="file"]')) {
+      const name = input.name;
+      const blurhashInputName = `${name}_blurhash`;
+      const blurhashInput = form.querySelector(
+        `input[name="${blurhashInputName}"]`
+      );
+      const reader = new FileReader();
+
+      input.addEventListener('change', function() {
+        submitButton.classList.add('is-loading');
+        submitButton.disabled = true;
+        reader.readAsDataURL(input.files[0]);
+      });
+
+      reader.addEventListener('load', function() {
+        const image = new Image();
+
+        image.addEventListener('load', function() {
+          const imageData = blurhash.getImageData(image);
+          blurhash.encodePromise(
+            imageData, image.width, image.height, 4, 3
+          ).then(function(hash) {
+            blurhashInput.value = hash;
+            submitButton.disabled = false;
+            submitButton.classList.remove('is-loading');
+          });
+        });
+
+        image.src = reader.result;
+      });
+    }
+  }
+})();
+

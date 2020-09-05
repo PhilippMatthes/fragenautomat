@@ -88,18 +88,6 @@ DATABASES = {
 }
 
 
-# Huey configuration
-# https://huey.readthedocs.io/en/latest/django.html
-
-HUEY = {
-    'huey_class': 'huey.RedisHuey',
-    'connection': {
-        'host': 'localhost',
-        'port': 6379,
-    },
-}
-
-
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
