@@ -18,26 +18,37 @@
 
       <div id="navbar" class="navbar-menu">
         <div class="navbar-start">
-          {% if not user.is_authenticated %}
-            <a href="{% url 'profiles:registration' %}" class="navbar-item">
-              Register
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link">
+              Account
             </a>
-            <a href="{% url 'profiles:login'%}" class="navbar-item">
-              Login
-            </a>
-          {% else %}
-            <a href="{% url 'profiles:profile' request.user.username %}" class="navbar-item">
-              <i class="fas fa-user mr-2"></i><strong>{{ request.user.username }}</strong>
-            </a>
-            <a href="{% url 'profiles:logout' %}" class="navbar-item">
-              Logout
-            </a>
-            {% if user.is_superuser %}
-              <a href="{% url 'admin:index' %}" class="navbar-item">
-                Administration
-              </a>
-            {% endif %}
-          {% endif %}
+
+            <div class="navbar-dropdown">
+              {% if not user.is_authenticated %}
+                <a href="{% url 'profiles:registration' %}" class="navbar-item">
+                  Register
+                </a>
+                <hr class="navbar-divider">
+                <a href="{% url 'profiles:login'%}" class="navbar-item">
+                  Login
+                </a>
+              {% else %}
+                <a href="{% url 'profiles:profile' request.user.username %}" class="navbar-item">
+                  <i class="fas fa-user mr-2"></i><strong>{{ request.user.username }}</strong>
+                </a>
+                <hr class="navbar-divider">
+                <a href="{% url 'profiles:logout' %}" class="navbar-item">
+                  Logout
+                </a>
+                {% if user.is_superuser %}
+                  <hr class="navbar-divider">
+                  <a href="{% url 'admin:index' %}" class="navbar-item">
+                    Administration
+                  </a>
+                {% endif %}
+              {% endif %}
+            </div>
+          </div>
 
           <div class="navbar-item has-dropdown is-hoverable">
             <a class="navbar-link">
