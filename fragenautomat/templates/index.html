@@ -14,6 +14,14 @@
 {% block body %}
 
 <div class="container">
+  <div class="columns is-centered">
+    <div class="column is-6 has-text-centered">
+      <img id="legal" alt="contact" src="{% static 'vendor/img/construction.svg' %}">
+      <p class="mt-5">Welcome to the new fragenautom.at! It is currently being built <a href="https://github.com/fragenautomat/website" target="_blank">over here on Github</a>. Because of it being still under construction, there might be some missing features or other issues. Good thing is <strong>you can still view and use all old quizzes</strong>. Let us know if anything unexpected happened. Cheers!</p>
+      <hr>
+    </div>
+  </div>
+
   <section id="quizzes-container">
     {% if page %}
       <div class="columns is-multiline">

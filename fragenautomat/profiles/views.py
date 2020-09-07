@@ -1,7 +1,6 @@
 from django.views.generic import View
 from django.http import Http404, HttpResponseBadRequest
 from django.template.response import TemplateResponse
-from django.contrib.auth.forms import UserCreationForm
 from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect
 from django.core.paginator import Paginator, InvalidPage
@@ -12,7 +11,7 @@ from django.conf import settings
 from django.utils.crypto import get_random_string
 
 from profiles.models import Profile, Token
-from profiles.forms import ProfileForm
+from profiles.forms import ProfileForm, RegistrationForm
 
 
 class ProfileView(View):
@@ -64,7 +63,7 @@ class ProfileView(View):
 
 class RegistrationView(View):
     def get(self, request):
-        form = UserCreationForm()
+        form = RegistrationForm()
         return TemplateResponse(
             request, 'profiles/registration/register.html', {'form': form}
         )
@@ -87,7 +86,7 @@ class RegistrationView(View):
             email.send()
 
     def post(self, request):
-        form = UserCreationForm(request.POST)
+        form = RegistrationForm(request.POST)
         if not form.is_valid():
             return TemplateResponse(
                 request, 'profiles/registration/register.html', {'form': form}
