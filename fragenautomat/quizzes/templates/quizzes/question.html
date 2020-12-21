@@ -45,20 +45,45 @@
         </a>
 
         {% if form %}
-          <button class="button collapse mt-3" data-target="#edit-form">
+          <button class="button collapse mt-3" data-target=".form-edit-toggle">
             <i class="fas fa-edit mr-2"></i> Edit Question
           </button>
         {% endif %}
       </div>
 
       <div class="box">
+        <h4>
+          <strong>{{ quiz.title }}</strong> -
+          A quiz by
+          <strong>
+            <a href="{% url 'profiles:profile' quiz.author.profile %}">
+              {% if quiz.author.profile.real_name %}
+                {{ quiz.author.profile.real_name }} (@{{ quiz.author }})
+              {% else %}
+                @{{ quiz.author }}
+              {% endif %}
+            </a>
+          </strong>
+        </h4>
+        <h5>{{ quiz.description }}</h5>
+        <hr>
         {% include 'pagination.html' with hide_numbers=True %}
         {% include 'calendar_menu.html' %}
+        <hr>
+        {% if has_quiz_access %}
+          <form method="POST" action="{% url 'quizzes:create_question' quiz.slug %}">
+          {% csrf_token %}
+          <button type="submit"
+                  class="button is-success">
+            <i class="fas fa-plus mr-2"></i> Create New Question
+          </button>
+          </form>
+        {% endif %}
       </div>
     </div>
 
     {% if form %}
-      <div id="edit-form" class="column is-6 is-hidden">
+      <div id="edit-form" class="form-edit-toggle column is-6 is-hidden">
         <div class="box">
           <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}

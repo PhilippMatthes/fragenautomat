@@ -1,0 +1,17 @@
+<figure class="image is-square has-background-light round">
+  {% include 'profiles/profile_icon.html' %}
+</figure>
+<div class="content mt-6">
+  <p>
+    {% if profile.real_name %}
+    <strong>{{ profile.real_name }}</strong>
+    {% else %}
+    {% endif %}
+    <small>@{{ profile.user.username }}</small>
+  </p>
+  <p>
+    {% if profile.description %}
+      {{ profile.description }}
+    {% endif %}
+  </p>
+</div>

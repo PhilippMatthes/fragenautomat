@@ -16,9 +16,15 @@
   <div class="content mt-3">
     <p>
       <strong>
-        <a href="{% url 'profiles:profile' quiz.author.username %}">
-          @{{ quiz.author.username }}
-        </a>
+        <strong>
+          <a href="{% url 'profiles:profile' quiz.author.username %}">
+            {% if quiz.author.profile.real_name %}
+              {{ quiz.author.profile.real_name }} (@{{ quiz.author }})
+            {% else %}
+              @{{ quiz.author }}
+            {% endif %}
+          </a>
+        </strong>
       </strong>
       created this quiz {{ quiz.created_date|timesince }} ago
     </p>
