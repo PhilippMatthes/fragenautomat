@@ -26,6 +26,8 @@ def get_next_scoped_id(quiz):
 
 class CreateQuestionView(View):
     def has_quiz_access(self, quiz):
+        if not self.request.user or not self.request.user.is_authenticated:
+            return False
         return quiz.contributor_set \
             .filter(user=self.request.user) \
             .exists()
@@ -62,6 +64,8 @@ class QuizPaginator(SingleItemPaginator):
 
 class QuestionView(View):
     def has_quiz_access(self, quiz):
+        if not self.request.user or not self.request.user.is_authenticated:
+            return False
         return quiz.contributor_set \
             .filter(user=self.request.user) \
             .exists()
