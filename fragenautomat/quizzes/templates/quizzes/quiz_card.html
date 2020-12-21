@@ -6,28 +6,42 @@
           data-src="{{ MEDIA_URL }}{{ quiz.image }}"
           {% endif %}
           >
-    <hr>
-    <p class="subtitle mb-2 is-size-4">{{ quiz.title }}</p>
+    <p class="subtitle mb-2 pt-5 is-size-4">{{ quiz.title }}</p>
+    <div class="content mb-2"><i class="fas fa-eye"></i> {{ quiz.number_of_views }} Views</div>
     <div class="content mb-2">{{ quiz.description }}</div>
   </a>
 
   <hr>
 
-  <div class="content mt-3">
-    <div class="content mb-2"><i class="fas fa-eye"></i> {{ quiz.number_of_views }} Views</div>
-    <p>
+  <p class="py-1"><strong>Contributors</strong></p>
+  {% for contributor in quiz.contributor_set.all %}
+    {% if contributor.user != quiz.author %}
+    <p class="py-1">
+      &raquo;
       <strong>
-        <strong>
-          <a href="{% url 'profiles:profile' quiz.author.username %}">
-            {% if quiz.author.profile.real_name %}
-              {{ quiz.author.profile.real_name }} (@{{ quiz.author }})
-            {% else %}
-              @{{ quiz.author }}
-            {% endif %}
-          </a>
-        </strong>
+        <a href="{% url 'profiles:profile' contributor.user.username %}">
+          {% if contributor.user.profile.real_name %}
+            {{ contributor.user.profile.real_name }} (@{{ contributor.user }})
+          {% else %}
+            @{{ contributor.user }}
+          {% endif %}
+        </a>
       </strong>
-      created this quiz {{ quiz.created_date|timesince }} ago
     </p>
-  </div>
+    {% endif %}
+  {% endfor %}
+
+  <p class="py-1">
+    &raquo;
+    <strong>
+      <a href="{% url 'profiles:profile' quiz.author.username %}">
+        {% if quiz.author.profile.real_name %}
+          {{ quiz.author.profile.real_name }} (@{{ quiz.author }})
+        {% else %}
+          @{{ quiz.author }}
+        {% endif %}
+      </a>
+    </strong>
+    created this quiz {{ quiz.created_date|timesince }} ago
+  </p>
 </div>

@@ -13,7 +13,7 @@ from django.db.models.functions import Coalesce
 from fragenautomat.paginators import SingleItemPaginator
 from fragenautomat.sanitization import clean_markdown
 
-from quizzes.models import Quiz, Question
+from quizzes.models import Quiz, Question, Contributor, Contribution
 from quizzes.forms import QuestionForm
 
 
@@ -26,9 +26,9 @@ def get_next_scoped_id(quiz):
 
 class CreateQuestionView(View):
     def has_quiz_access(self, quiz):
-        is_author = quiz.author == self.request.user
-        is_superuser = self.request.user.is_superuser
-        return is_author or is_superuser
+        return quiz.contributor_set \
+            .filter(user=self.request.user) \
+            .exists()
 
     def post(self, request, quiz_slug):
         quiz = get_object_or_404(Quiz, slug=quiz_slug)
@@ -62,9 +62,9 @@ class QuizPaginator(SingleItemPaginator):
 
 class QuestionView(View):
     def has_quiz_access(self, quiz):
-        is_author = quiz.author == self.request.user
-        is_superuser = self.request.user.is_superuser
-        return is_author or is_superuser
+        return quiz.contributor_set \
+            .filter(user=self.request.user) \
+            .exists()
 
     def get_page(self, quiz):
         paginator = QuizPaginator(quiz)
@@ -120,6 +120,10 @@ class QuestionView(View):
             question.solution_image = solution_image
 
         question.save()
+
+        Contribution.objects.create(
+            question=question, user=self.request.user
+        )
 
         messages.success(request, 'Question updated successfully.')
         url = reverse('quizzes:question', kwargs={'quiz_slug': quiz_slug})

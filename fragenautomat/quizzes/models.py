@@ -29,6 +29,22 @@ class Quiz(models.Model):
     created_date = models.DateTimeField(default=timezone.now)
     updated_date = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.title
+
+
+class Contributor(models.Model):
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    created_date = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        ordering = ['-created_date']
+
+    def __str__(self):
+        return f'{self.user} on {self.quiz}'
+
 
 def question_description_image_upload_path(question, filename):
     suffix = pathlib.Path(filename).suffix
@@ -70,3 +86,13 @@ class Question(models.Model):
         # since a Django paginator starts counting with 1,
         # we need to add 1 to the 0-based scoped id
         return self.scoped_id + 1
+
+
+class Contribution(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    created_date = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        ordering = ['-created_date']
