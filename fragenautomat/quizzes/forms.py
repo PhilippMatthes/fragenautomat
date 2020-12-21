@@ -7,6 +7,7 @@ class QuestionForm(forms.ModelForm):
     class Meta:
         model = Question
         exclude = [
+            'number_of_views',
             'scoped_id',
             'quiz',
             'created_date',

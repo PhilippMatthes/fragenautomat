@@ -18,6 +18,8 @@ class Quiz(models.Model):
     description = models.TextField()
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    number_of_views = models.PositiveIntegerField(default=0)
+
     image = models.ImageField(
         upload_to=quiz_image_upload_path,
         null=True, blank=True
@@ -43,6 +45,8 @@ def question_solution_image_upload_path(question, filename):
 class Question(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     scoped_id = models.PositiveIntegerField()
+
+    number_of_views = models.PositiveIntegerField(default=0)
 
     description = models.TextField(null=True, blank=True)
     description_image = models.ImageField(

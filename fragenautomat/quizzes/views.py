@@ -76,8 +76,14 @@ class QuestionView(View):
 
     def get(self, request, quiz_slug):
         quiz = get_object_or_404(Quiz, slug=quiz_slug)
+        quiz.number_of_views += 1
+        quiz.save()
+
         page = self.get_page(quiz)
         question = page.item
+        question.number_of_views += 1
+        question.save()
+
         has_quiz_access = self.has_quiz_access(quiz)
         context = {
             'quiz': quiz,

@@ -16,6 +16,7 @@
       <div class="box">
         <div>
           <small class="has-text-grey">Question {{ page.number }}</small>
+          <small class="has-text-grey is-pulled-right"><i class="fas fa-eye"></i> {{ quiz.number_of_views }} Views</small>
           {% if question.description_image %}
             <img class="question-image mt-3 blurhash"
                 data-blurhash="{{ question.description_image_blurhash }}"
