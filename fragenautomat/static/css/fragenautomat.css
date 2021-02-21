@@ -109,9 +109,6 @@ img#legal {
 }
 
 .question-image {
-  height: 12rem;
-  display: block;
-  object-fit: contain;
   border-style: solid;
   border-width: 1px;
   border-radius: 0.25rem;
