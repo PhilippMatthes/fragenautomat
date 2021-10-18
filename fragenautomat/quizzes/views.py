@@ -9,12 +9,15 @@ from django.contrib import messages
 from django.urls import reverse
 from django.db.models.aggregates import Max
 from django.db.models.functions import Coalesce
+from django.db import transaction
+from django.utils.text import slugify
+from django.utils.html import escape
 
 from fragenautomat.paginators import SingleItemPaginator
 from fragenautomat.sanitization import clean_markdown
 
 from quizzes.models import Quiz, Question, Contributor, Contribution
-from quizzes.forms import QuestionForm
+from quizzes.forms import QuizForm, QuestionForm
 
 
 def get_next_scoped_id(quiz):
@@ -22,6 +25,82 @@ def get_next_scoped_id(quiz):
         .filter(quiz=quiz) \
         .aggregate(next_scoped_id=(Coalesce(Max('scoped_id'), 0) + 1))
     return query['next_scoped_id']
+
+
+class UpdateQuizView(View):
+    def has_quiz_access(self, quiz):
+        if not self.request.user or not self.request.user.is_authenticated:
+            return False
+        return quiz.contributor_set \
+            .filter(user=self.request.user) \
+            .exists()
+
+    def post(self, request, quiz_slug):
+        if not request.user.is_authenticated:
+            raise Http404
+        existing_quiz = get_object_or_404(Quiz, slug=quiz_slug)
+        if not self.has_quiz_access(existing_quiz):
+            raise Http404
+        form = QuizForm(request.POST, instance=existing_quiz)
+        if not form.is_valid():
+            return HttpResponseBadRequest()
+
+        new_quiz = form.save(commit=False)
+        new_quiz.slug = slugify(new_quiz.title)
+        new_quiz.save()
+
+        messages.success(request, 'Quiz info updated!')
+        url = reverse('quizzes:question', kwargs={'quiz_slug': new_quiz.slug})
+        return redirect(f'{url}?{urllib.parse.urlencode(request.GET)}')
+
+
+class CreateQuizView(View):
+    def post(self, request):
+        if not request.user.is_authenticated:
+            raise Http404
+        form = QuizForm(request.POST)
+        if not form.is_valid():
+            return HttpResponseBadRequest()
+
+        quiz = form.save(commit=False)
+
+        quiz_slug = slugify(quiz.title)
+        if Quiz.objects.filter(slug=quiz_slug).exists():
+            messages.warning(
+                request, 'A quiz with a similar name already exists.'
+            )
+            url = reverse('index')
+            return redirect(f'{url}?{urllib.parse.urlencode(request.GET)}')
+
+        quiz.title = escape(quiz.title)
+        quiz.slug = quiz_slug
+        quiz.is_moderated = False
+        quiz.description = escape(quiz.description)
+        quiz.author = request.user
+
+        quiz_image = request.FILES.get('image')
+        if quiz_image:
+            quiz.image = quiz_image
+
+        new_question = Question(
+            quiz=quiz,
+            scoped_id=0,
+            description='`This question has just been created and was not edited yet.`'
+        )
+
+        with transaction.atomic():
+            quiz.save()
+            new_question.save()
+            Contribution.objects.create(
+                question=new_question, user=request.user
+            )
+            Contributor.objects.create(
+                quiz=quiz, user=request.user
+            )
+
+        messages.success(request, 'New quiz created!')
+        url = reverse('quizzes:question', kwargs={'quiz_slug': quiz_slug})
+        return redirect(f'{url}?{urllib.parse.urlencode(request.GET)}')
 
 
 class CreateQuestionView(View):
@@ -96,8 +175,8 @@ class QuestionView(View):
             'has_quiz_access': has_quiz_access,
         }
         if has_quiz_access:
-            form = QuestionForm(instance=question)
-            context['form'] = form
+            context['question_form'] = QuestionForm(instance=question)
+            context['quiz_form'] = QuizForm(instance=quiz)
         return TemplateResponse(request, 'quizzes/question.html', context)
 
     def post(self, request, quiz_slug):
@@ -105,7 +184,6 @@ class QuestionView(View):
         if not self.has_quiz_access(quiz):
             raise Http404
 
-        quiz = get_object_or_404(Quiz, slug=quiz_slug)
         page = self.get_page(quiz)
         question = page.item
         form = QuestionForm(request.POST, instance=question)

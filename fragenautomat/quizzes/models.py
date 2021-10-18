@@ -18,6 +18,8 @@ class Quiz(models.Model):
     description = models.TextField()
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    is_moderated = models.BooleanField(default=False)
+
     number_of_views = models.PositiveIntegerField(default=0)
 
     image = models.ImageField(

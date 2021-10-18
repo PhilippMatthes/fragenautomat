@@ -13,15 +13,20 @@
 
 {% block body %}
 
-<div class="container">
-  <div class="columns is-centered">
-    <div class="column is-6 has-text-centered">
-      <img id="legal" alt="contact" src="{% static 'vendor/img/construction.svg' %}">
-      <p class="mt-5">Welcome to the new fragenautom.at! It is currently being built <a href="https://github.com/fragenautomat/website" target="_blank">over here on Github</a>. Because of it being still under construction, there might be some missing features or other issues. Good thing is <strong>you can still view and use all old quizzes</strong>. Let us know if anything unexpected happened. Cheers!</p>
-      <hr>
-    </div>
+<section class="hero is-info is-medium is-bold" style="background: linear-gradient(130deg, #00c6ff, #0072ff)">
+  <div class="hero-body">
+      <div class="container has-text-centered">
+        <div class="columns is-centered">
+        <div class="column is-6 has-text-centered">
+          <p class="title">Welcome to fragenautom.at</p>
+          <p class="subtitle">We provide <strong>{{ statistics.number_of_questions }}</strong> educational questions about <strong>{{ statistics.number_of_quizzes }}</strong> topics, accessed over <strong>{{ statistics.number_of_views }}</strong> times already! fragenautom.at is a non-profit project helping students learn for their exams. Help us building the platform now <strong><a href="https://github.com/fragenautomat/website" target="_blank">over here on Github</a></strong>!</p>
+        </div>
+        </div>
+      </div>
   </div>
+</section>
 
+<div class="container pt-6 px-3">
   <section id="quizzes-container">
     {% if page %}
       <div class="columns is-multiline">
@@ -30,14 +35,30 @@
           {% include 'quizzes/quiz_card.html' %}
         </div>
       {% endfor %}
+      {% if form %}
+        <div class="column is-4">
+          <div id="quiz-form" class="box">
+            <p>Create new quiz</p>
+            <form method="POST" action="{% url 'quizzes:create_quiz' %}" enctype="multipart/form-data">
+              {% csrf_token %}
+              {{ form.as_p }}
+              <div class="control is-expanded mt-3">
+                <button class="button is-fullwidth is-link">
+                  Create Quiz
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      {% endif %}
       </div>
 
       {% include 'pagination.html' %}
     {% else %}
       <div class="has-text-centered">
         <img class="not-found"
-             alt="not found"
-             src="{% static 'vendor/img/tree-swing.svg' %}">
+              alt="not found"
+              src="{% static 'vendor/img/tree-swing.svg' %}">
         <h4 class="mt-3">No quizzes found.</h4>
 
         <div class="columns is-centered">

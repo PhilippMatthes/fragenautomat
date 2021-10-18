@@ -9,6 +9,9 @@
     <p class="subtitle mb-2 pt-5 is-size-4">{{ quiz.title }}</p>
     <div class="content mb-2"><i class="fas fa-eye"></i> {{ quiz.number_of_views }} Views</div>
     <div class="content mb-2">{{ quiz.description }}</div>
+    {% if not quiz.is_moderated %}
+    <div class="content mb-2 has-text-danger">This quiz is currently untrusted and hidden from the public. Contact us at moderation@fragenautom.at to make your quiz publicly available!</div>
+    {% endif %}
   </a>
 
   <hr>

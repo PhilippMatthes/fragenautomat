@@ -10,7 +10,7 @@
 
 {% block body %}
 
-<div class="container">
+<div class="container pt-6 px-3">
   <div class="columns is-centered">
     <div class="column is-6">
       <div class="box">
@@ -45,7 +45,7 @@
           </div>
         </a>
 
-        {% if form %}
+        {% if question_form %}
           <button class="button collapse mt-3" data-target=".form-edit-toggle">
             <i class="fas fa-edit mr-2"></i> Edit Question
           </button>
@@ -57,6 +57,22 @@
           <strong>{{ quiz.title }}</strong>
         </h4>
         <h5 class="pt-1">{{ quiz.description }}</h5>
+        {% if quiz_form %}
+          <div class="control is-expanded pt-2">
+            <button class="button is-fullwidth collapse" data-target="#quiz-form">
+              Change quiz details
+            </button>
+          </div>
+          <div id="quiz-form" class="is-hidden">
+            <div class="box">
+              <form method="POST" action="{% url 'quizzes:update_quiz' quiz.slug %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ quiz_form.as_p }}
+                <button class="button is-link">Update Quiz</button>
+              </form>
+            </div>
+          </div>
+        {% endif %}
         <hr>
         {% include 'pagination.html' with hide_numbers=True %}
         {% include 'calendar_menu.html' %}
@@ -73,12 +89,12 @@
       </div>
     </div>
 
-    {% if form %}
+    {% if question_form %}
       <div class="form-edit-toggle column is-6 is-hidden">
         <div class="box">
           <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            {{ form.as_p }}
+            {{ question_form.as_p }}
             <button class="button is-link">Update Question</button>
           </form>
         </div>
